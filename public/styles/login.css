@@ -1,0 +1,82 @@
+/* CSS 公共样式 */
+body {
+	background: #e1e5e5 url(/login/bj.jpg) repeat-x;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+*:focus {
+	outline: none;
+} /*去除谷歌浏览器的默认边框*/
+
+/*------------------------------------内容-----------------------------------------------------*/
+.main {
+	margin: 0;
+	padding: 0;
+}
+
+.logo_t {
+	width: 500px;
+	margin: 20px auto 0 auto;
+}
+
+.banner {
+	width: 1000px;
+	margin: 0 auto;
+}
+/*------------------------表单+底下版权文字（渐变背景）开始-----------*/
+.frm_bq {
+	width: 1000px;
+	height: 252px;
+	margin: 0 auto;
+	background: url(/login/bd_bj.png) no-repeat top;
+}
+
+.bd_ys {
+	width: 313px;
+	height: 50px;
+	line-height: 50px;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	border-bottom: 1px solid #a3a9aa;
+	background: none;
+	margin-bottom: 5px;
+	font-family: "微软雅黑";
+	font-size: 16px;
+	color: #929191;
+}
+
+.tb1 {
+	padding-left: 45px;
+	background: url(/login/tb_1.png) no-repeat 6px 10px;
+}
+
+.tb2 {
+	padding-left: 45px;
+	background: url(/login/tb_2.png) no-repeat 6px 10px;
+}
+
+.tb3 {
+	padding-left: 45px;
+	background: url(/login/tb_3.png) no-repeat 6px 10px;
+}
+
+.h_gd {
+	margin-top: 3%;
+}
+
+/*--------表单结束-----------*/
+
+/*-------版权开始-----------*/
+.bq_sm {
+	text-align: center;
+	color: #909090;
+	font-size: 12px;
+	margin-top: 40px;
+}
+/*-------版权结束-----------*/

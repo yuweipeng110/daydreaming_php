@@ -1,0 +1,30 @@
+/*addGoods.html 页面下的*/  /*editGoods.html 页面下的*/
+.layui-upload-img { width: 90px; height: 90px; margin: 0; }
+.pic-more { width:100%; float: left; margin: 10px 0px 0px 0px;}
+.pic-more li { width:90px; float: left; margin-right: 5px;}
+.pic-more li .layui-input { display: initial; }
+.pic-more li a { position: absolute; top: 0; display: block; }
+.pic-more li a i { font-size: 24px; background-color: #008800; }
+#slide-pc-priview .item_img img{ width: 90px; height: 90px;}
+#slide-pc-priview li{position: relative;}
+#slide-pc-priview li .operate{ color: #000; display: none;}
+#slide-pc-priview li .toleft{ position: absolute;top: 40px; left: 1px; cursor:pointer;}
+#slide-pc-priview li .toright{ position: absolute;top: 40px; right: 1px;cursor:pointer;}
+#slide-pc-priview li .close{position: absolute;top: 5px; right: 5px;cursor:pointer;}
+#slide-pc-priview li:hover .operate{ display: block;}
+
+/*商品管理页面*/
+.title{display:none;width:90px;height:25px;position: absolute;top:64px;background:rgba(21,26,33,.6);color:#fff;text-align:center;line-height:25px;}
+.titleimg{position: relative}
+.listcontainer{position: relative;height:100%;background: #fff;border:1px solid #ccc;display: none;}
+.letter{width:100%;margin-top: 5px}
+.letter ul{overflow: hidden}
+.letter li{cursor: pointer;float: left;padding: 2px 5px;}
+.list{font-size: 20px;height:300px;overflow: hidden;overflow-y: scroll;margin-top: 20px}
+.listEver p{background: #5FB878;padding-left:10px;cursor: pointer;margin-bottom: 10px}
+.listEver li{padding-left:10px;padding-bottom: 10px;cursor: pointer}
+.letter{font-size:20px}
+.windetail{margin-top: 15px;}
+.windetail .layui-input-inline{position: relative}
+.windetail .layui-form-select{width:70%}
+.fragrant,.volume,.packing{position: absolute;top: 11px;left: -43px;z-index: 200;}

@@ -1,0 +1,134 @@
+/* 样式重置 */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+html,body{
+	height: 100%;
+}
+a{
+	text-decoration: none;
+}
+/* input  placeholder*/
+input[type=text]::-webkit-input-placeholder {
+	/* WebKit browsers */
+	color: #ccc;
+}
+
+input[type=text]:-moz-placeholder {
+	/* Mozilla Firefox 4 to 18 */
+	color: #ccc;
+}
+
+input[type=text]::-moz-placeholder {
+	/* Mozilla Firefox 19+ */
+	color: #ccc;
+}
+
+input[type=text]:-ms-input-placeholder {
+	/* Internet Explorer 10+ */
+	color: #ccc;
+}
+/* 自定义样式 */
+.clear {
+	zoom: 1;
+}
+.clear:after {
+	content: "\20";
+	display: block;
+	height: 0;
+	clear: both;
+}
+.show {
+	display: block!important;
+}
+.hide {
+	display: none!important;
+}
+.floatL {
+	float: left;
+}
+.floatR {
+	float: right;
+}
+.flex-box {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.h100 {
+	height: 100%;
+}
+.color1{
+	color: #c6c6c6;
+}
+.border1{
+	border: 1px solid #8a8989;
+}
+.error {
+	color: red;
+}
+/* 背景色 */
+/* 灰色 */
+.bgcolor-gray1{
+  background-color: #eff2f5;
+}
+.bgcolor-white{
+  background-color: #fff;
+}
+/* 弹性盒 */
+/* 中间对齐 左右贴边 */
+.display-flex1{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+/* 字体颜色 */
+.text-red{
+  color: #ff0000;
+}
+.text-blue{
+  color: #51a8ec;
+}
+.text-gray{
+  color: #999;
+}

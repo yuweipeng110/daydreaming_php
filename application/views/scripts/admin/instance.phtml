@@ -1,0 +1,32 @@
+<script type="text/javascript">
+function EditForm(state,key){
+	var roleChenked = $("#restday_" + key).is(':checked') ? 1 : 0;
+	$.post("/admin/instance.ajax",{"role":state,"roleChenked":roleChenked,"userId":'<?php echo $this->userId;?>'},function(result){
+	});
+}
+</script>
+<table style="width: 100%;" class="table-list">
+	<thead>
+		<tr>
+			<th width="5%" style="text-align: right;">#</th>
+			<th width="20%" style="text-align: left;">角色</th>
+			<th width="10%" style="text-align: center;"></th>
+		</tr>
+	</thead>
+<?php foreach ($this->instanceList as $key=>$value):?>				
+	<tbody>
+		<tr class="alt">
+			<td style="text-align: right;">#</td>
+			<td style="text-align: left;"><?php echo $value['NAME']?></td>
+			<td style="text-align: center;">
+<?php 		$roleObject = System_Admin_InstanceView::GetInstanceFromUser ( $this->userId, $value['STATE'] );?>
+<?php 		if(count($roleObject)==1):?>
+				<input type="checkbox" id="restday_<?php echo $key;?>" name="restday" checked value="<?php echo $value['STATE']?>" onclick="EditForm('<?php echo $value['STATE']?>','<?php echo $key;?>')" />								
+<?php 		else:?>					
+				<input type="checkbox" id="restday_<?php echo $key;?>" name="restday" value="<?php echo $value['STATE']?>" onclick="EditForm('<?php echo $value['STATE']?>','<?php echo $key;?>')" />
+<?php 		endif;?>							
+			</td>
+		</tr>
+	</tbody>
+<?php endforeach;?>
+</table>

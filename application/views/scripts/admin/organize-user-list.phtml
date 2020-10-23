@@ -1,0 +1,28 @@
+<table class="table-list" style="width: 100%">
+	<thead>
+		<tr>
+			<th style="text-align:center; width: 25%;">用户名</th>
+			<th style="text-align:center; width: 25%;">真实姓名</th>
+			<th style="text-align:center; width: 25%;">用户组别</th>
+			<th style="text-align:center; width: 25%;">所属分厂</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ( $this->usersOrganize as $userObject):?>
+		<tr class="alt">
+			<td style="text-align:center;">
+				<?php echo $userObject->GetUserName();?>
+			</td>
+			<td style="text-align:center;">
+				<?php echo $userObject->GetRealName();?>
+			</td>
+			<td style="text-align:center;">
+				<?php echo is_null($userObject->GetTeam()) ? "" : $userObject->GetTeam()->GetTitle();?>
+			</td>
+			<td style="text-align:center;">
+				<?php echo is_null($userObject->GetBranch()) ? "" : $userObject->GetBranch()->GetTitle();?>
+			</td>
+		</tr>
+		<?php endforeach;?>
+	</tbody>
+</table>

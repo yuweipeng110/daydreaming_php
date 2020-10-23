@@ -1,0 +1,55 @@
+<?php echo $this->render('include/header.phtml');?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<?php echo $this->render('include/tabs.phtml'); ?>
+<?php echo $this->render('include/datepicker.phtml'); ?>
+<style type="text/css">
+.border-orange {
+	border: 1px solid #ff7700;
+}
+
+.border-green {
+	border: 1px solid #00af43;
+}
+
+.border-red {
+	border: 1px solid #ff0000;
+}
+
+.border-sykblue {
+	border: 1px solid #00b3e3;
+}
+</style>
+<script type="text/javascript">
+$(function() {
+	$( "#tabs-base" ).tabs({
+		beforeLoad: function( event, ui ) {
+			ui.jqXHR.error(function() {
+				ui.panel.html("无法加载内容，请及时通知技术部。");
+			});
+		}
+	});
+});
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox" style="min-width: 1000px;">
+<?php if(count($this->logFileList) > 0):?>
+			<div id="tabs-base">
+				<ul>
+<?php foreach($this->logFileList as $key => $value):?>
+					<li><a href="/log/log.details?logFileName=<?php echo $value[0]?>"><?php echo $value[1][0];?>.<?php echo $value[1][1];?></a></li>
+<?php endforeach;?>
+				</ul>
+			</div>
+<?php else:?>
+		暂无系统服务日志
+<?php endif;?>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

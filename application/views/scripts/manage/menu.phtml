@@ -1,0 +1,112 @@
+
+      <div class="layui-side layui-side-menu">
+        <div class="layui-side-scroll">
+          <div class="layui-logo">
+            <span>欢迎您:<?php echo $this->user->GetUserName();?></span>
+          </div>
+          <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+<?php		foreach ($this->group->GetItems() as $key => $value):?>
+<?php			$menuList = $value->GetChildren();?>
+<?php			if($this->user->GetId() == 1):?>
+		            <li data-name="user" class="layui-nav-item">
+		              <a href="javascript:;" lay-tips="用户" lay-direction="2">
+		                <i class="layui-icon layui-icon-app"></i>
+		                <cite><?php echo $value->GetTitle();?></cite>
+		              </a>
+		              <dl class="layui-nav-child">
+<?php 					$menuIdData = array();?>
+<?php					foreach($menuList as $menuKey => $menuValue):?>
+<?php
+							$isExists = false;
+							foreach($menuIdData as $menuId){
+								if($menuValue->GetId()==$menuId){
+									$isExists = true;
+								}
+							}
+							if(!$isExists){
+								$menuIdData[] = $menuValue->GetId();
+							}
+?>
+<?php 						if(!$isExists):?>
+				                <dd>
+				                  <a lay-href="<?php echo $menuValue->GetUrl();?>"><?php echo $menuValue->GetTitle();?></a>
+				                </dd>
+<?php 						endif;?>
+<?php					endforeach;?>
+		              </dl>
+		            </li>
+<?php			else:?>
+<?php				$hasItem = false;?>
+<?php				foreach ($menuList as $menuKey => $menuValue):?>
+<?php					foreach ($this->selfMenu as $selfMenu):?>
+<?php						if ($menuValue->GetId() == $selfMenu):?>
+<?php							$hasItem = true;?>
+<?php							break;?>
+<?php						endif;?>
+<?php					endforeach;?>
+<?php					if ($hasItem):?>
+<?php						break;?>
+<?php					endif;?>
+<?php				endforeach;?>
+<?php				if ($hasItem):?>
+			            <li data-name="user" class="layui-nav-item">
+			              <a href="javascript:;" lay-tips="用户" lay-direction="2">
+			                <i class="layui-icon layui-icon-user"></i>
+			                <cite><?php echo $value->GetTitle();?></cite>
+			              </a>
+			              <dl class="layui-nav-child">
+<?php						foreach ($menuList as $menuKey => $menuValue):?>
+<?php 							$menuIdData = array();?>
+<?php							foreach ($this->selfMenu as $selfMenu):?>
+<?php								if ($menuValue->GetId() == $selfMenu):?>
+<?php
+										$isExists = false;
+										foreach($menuIdData as $menuId){
+											if($menuValue->GetId()==$menuId){
+												$isExists = true;
+											}
+										}
+										if(!$isExists){
+											$menuIdData[] = $menuValue->GetId();
+										}
+?>
+<?php 									if(!$isExists):?>
+							                <dd>
+							                  <a lay-href="<?php echo $menuValue->GetUrl();?>"><?php echo $menuValue->GetTitle();?></a>
+							                </dd>
+<?php									endif;?>
+<?php								endif;?>
+<?php							endforeach;?>
+<?php						endforeach;?>
+			              </dl>
+			            </li>
+<?php				endif;?>
+<?php			endif;?>
+<?php		endforeach;?>
+            <!-- 
+            <li data-name="set" class="layui-nav-item">
+              <a href="javascript:;" lay-tips="设置" lay-direction="2">
+                <i class="layui-icon layui-icon-set"></i>
+                <cite>设置</cite>
+              </a>
+              <dl class="layui-nav-child">
+                <dd class="layui-nav-itemed">
+                  <a href="javascript:;">系统设置</a>
+                  <dl class="layui-nav-child">
+                    <dd><a lay-href="set/system/website.html">网站设置</a></dd>
+                    <dd><a lay-href="set/system/email.html">邮件服务</a></dd>
+                  </dl>
+                </dd>
+                <dd class="layui-nav-itemed">
+                  <a href="javascript:;">我的设置</a>
+                  <dl class="layui-nav-child">
+                    <dd><a lay-href="set/user/info.html">基本资料</a></dd>
+                    <dd><a lay-href="set/user/password.html">修改密码</a></dd>
+                  </dl>
+                </dd>
+              </dl>
+            </li>
+             -->
+          </ul>
+        </div>
+      </div>

@@ -1,0 +1,60 @@
+<?php echo $this->render('include/header.phtml');?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function() {
+	oTable = $('#tablePassword').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": true,
+		"bSort": false,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"bStateSave": true
+	});
+} );
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<form action="/admin/setting" target="_self" method="post" />
+		<input type="hidden" name="act" value="setting" />
+		<input type="hidden" name="rand" value="<?php echo Func::Randomkeys(8);?>" />
+		<table cellspacing="0" cellpadding="0" border="0" class="display" id="tablePassword" class="table-list">
+			<thead>
+				<tr>
+					<th>属性</th>
+					<th>值</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="gradeA">
+					<td class="center">网站标题：</td>
+					<td><input type="text" name="title" value="<?php echo $this->system->GetTitle();?>"></td>
+				</tr>
+				<tr class="gradeA">
+					<td class="center">网站关键字：</td>
+					<td><textarea name="keywords" rows="2" cols="20" style="height: 93px; width: 700px;"><?php echo $this->system->GetKeywords();?></textarea>
+					</td>
+				</tr>
+				<tr class="gradeA">
+					<td class="center">网站说明：</td>
+					<td><textarea name="description" rows="2" cols="20" style="height: 263px; width: 700px;"><?php echo $this->system->GetDescription();?></textarea>
+					</td>
+				</tr>
+				<tr class="gradeA">
+					<td class="center">网站ICP信息：</td>
+					<td><input type="text" name="icp" value="<?php echo $this->system->GetIcp();?>"></td>
+				</tr>
+				<tr class="gradeD">
+					<td></td>
+					<td><input type="submit" value="修改" style="padding: 3px;"></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+<?php echo $this->render('include/footer.phtml'); ?>

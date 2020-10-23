@@ -1,0 +1,12 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title><?php echo SYSTEM_TITLE;?></title>
+</head>
+<frameset rows="0,*" frameborder="0" border="0" noresize>
+<frame src="/admin/hello" frameborder="0" border="0" noresize scrolling="no"></frame>
+<frameset cols="240,*" frameborder="0" border="0" noresize>
+	<frame src="/admin/menu" name="menu" />
+	<frame src="/admin/system" name="content" />
+</frameset>
+</html>

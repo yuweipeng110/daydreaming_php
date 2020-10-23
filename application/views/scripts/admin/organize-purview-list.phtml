@@ -1,0 +1,46 @@
+<form id="editPurview_<?php echo $this->organize->GetId();?>" name="editPurview_<?php echo $this->organize->GetId();?>" action="/admin/organize.list" method="post" target="_self">
+	<input type="hidden" name="act" value="editPurview">
+	<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+	<input type="hidden" name="organizeId" value="<?php echo $this->organize->GetId();?>">
+	<table class="table-list" style="width: 100%">
+		<tbody>
+<?php	foreach ( $this->group->GetItems () as $groupKey => $groupValue ):?>
+<?php		$menuList = $groupValue->GetChildren ();?>
+<?php		foreach ( $menuList as $menuKey => $menuValue ):?>
+			<tr class="alt">
+				<td style="text-align: left; width: 20%;">
+<?php
+					$isChecked = false;
+					foreach ( $this->adminPurview->GetMenus () as $k => $v ) {
+						if ($menuValue->GetId () == $v->GetId ()) {
+							$isChecked = true;
+							break;
+						}
+					}
+?>
+					<input type="checkbox" name="purview[]" value="<?php echo $menuValue->GetId();?>" <?php echo $isChecked ? "checked":""; ?> />
+<?php				echo $isChecked ? "访问":"　　"; ?>
+				</td>
+				<td style="text-align: left; width: 20%;">
+<?php 
+					$readonly = false;
+					foreach ( $this->adminPurview->GetPurview() as $k => $v ){
+						if($menuValue->GetId() == $v->GetMenu()->GetId()){
+							$readonly = $v->GetReadOnly();
+							break;
+						}
+					}
+?>
+<?php				if($isChecked):?>
+						<input type="checkbox" name="readonly[]" value="<?php echo $menuValue->GetId();?>" <?php echo $readonly ? "checked":""; ?> />
+<?php					echo $readonly ? "可写":"　　"; ?>
+<?php				endif;?>
+				</td>
+				<td style="text-align: left; width: 30%;"><?php echo $menuValue->GetTitle();?></td>
+				<td style="text-align: left; width: 30%;"><?php echo $groupValue->GetTItle();?></td>
+			</tr>
+<?php		endforeach;?>
+<?php	endforeach;?>
+	</tbody>
+	</table>
+</form>

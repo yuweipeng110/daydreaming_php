@@ -1,0 +1,59 @@
+<?php echo $this->render('include/header.phtml');?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/expander.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<?php echo $this->render('include/datepicker.phtml'); ?>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox" style="min-width: 1000px;">
+			<table style="width: 100%;" class="table-list">
+				<thead>
+					<tr>
+						<th width="10%" style="text-align: center;">姓名</th>
+						<th width="15%" style="text-align: center;">手机号</th>
+						<th width="15%" style="text-align: center;">工号</th>
+						<th width="15%" style="text-align: center;">性别</th>
+						<th width="10%" style="text-align: center;">微信名</th>
+					</tr>
+				</thead>
+				<tbody>
+<?php 			foreach ($this->userList->list as $value):?>							
+					<tr class="alt">
+						<td style="text-align: center;"><?php echo $value->user_real_name;?></td>
+						<td style="text-align: center;"><?php echo $value->user_mobile;?></td>
+						<td style="text-align: center;"><?php echo $value->user_no;?></td>
+						<td style="text-align: center;"><?php echo $value->user_sex==1 ? "男" : "女" ;?></td>
+						<td style="text-align: center;"><?php echo $value->user_wx_nickname;?></td>
+					</tr>
+<?php 			endforeach;?>					
+				</tbody>
+				<tfoot>
+					<tr class="alt">
+						<td colspan="999" height="30">
+							<span><a href="/admin/wechatuser?curr_page=1">首页</a></span>
+<?php 						if ($this->userList->curr_page>1):?>							
+								<span style="margin-left:10px;"><a href="/admin/wechatuser?curr_page=<?php echo $this->userList->curr_page - 1;?>">上一页</a></span> 
+<?php 						endif;?>	
+
+<?php 						for ($i=1;$i<=$this->userList->total_page;$i++):?>
+<?php 							if ($this->userList->curr_page==$i):?>
+									<span style="margin-left:10px;"><?php echo $i;?></span>
+<?php 							else:?>
+									<span style="margin-left:10px;"><a href="/admin/wechatuser?curr_page=<?php echo $i;?>"><?php echo $i;?></a></span>
+<?php 							endif;?>							
+<?php 						endfor;?>
+<?php 						if ( $this->userList->curr_page<$this->userList->total_page):?>							
+								<span style="margin-left:10px;"><a href="/admin/wechatuser?curr_page=<?php echo $this->userList->curr_page + 1;?>">下一页</a></span> 
+<?php 						endif;?>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

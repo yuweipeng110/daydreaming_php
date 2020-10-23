@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+	<string id="PARAMETER_ERROR">PARAMETER_ERROR</string>
+	<string id="TIMESTAMP_ERROR">TIMESTAMP_ERROR</string>
+	<string id="LOGIC_ERROR">LOGIC_ERROR</string>
+	<string id="SESSION_ERROR">SESSION_ERROR</string>
+</root>

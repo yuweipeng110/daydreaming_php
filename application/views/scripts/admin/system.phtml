@@ -1,0 +1,32 @@
+<?php echo $this->render('include/header.phtml');?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<style type="text/css">
+table {
+	width: 100%;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+	$("table tr").find("td:eq(0)").css("width","20%");
+	$("table tr").find("td:eq(1)").css("word-break","break-all");
+	$("table tr").find("td:eq(2)").css("word-break","break-all");
+});
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+<?php if ($this->user->GetId () == 'B2471F8C-93CB-2316-8E6A-DFDFAD9563EF'):?>
+<?php phpinfo();?>
+<?php else:?>
+<!-- <a href="/data/系统说明文档.pdf">系统说明文档</a> -->
+	<img alt="" src="/img/admin/order_process.png"/>
+	<img alt="" src="/img/admin/maintenance_process.png"/>
+	<img alt="" src="/img/admin/purchasing_process.png"/>
+<?php endif;?>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

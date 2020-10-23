@@ -1,0 +1,62 @@
+<link type="text/css" href="/js/ui/themes/<?php echo $this->theme;?>/jquery.ui.all.css" rel="stylesheet" />
+<script type="text/javascript" src="/js/jquery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript">
+function RndNum(n) {
+    var rnd = "";
+    for (var i = 0; i < n; i++)
+        rnd += Math.floor(Math.random() * 10);
+    return rnd;
+}
+
+function RefreshFrameSet(){
+	window.parent.location.reload();
+}
+
+function ContentFrameSet(url){
+	window.parent.frames.content.location.href = url;
+}
+
+function MenuFrameSet(){
+	window.parent.frames.menu.location.reload();
+}
+
+function WindowFrameSet(url){
+	window.parent.frames["window"].location.href = url;
+}
+
+function logoff(url){
+	window.parent.location.href = url;
+}
+
+function OpenWindow(url){
+	window.open(url);
+}
+
+function returnIndex(){
+	window.parent.location.href = "/";
+}
+
+function SubmitConfirm(formId, warnText){
+	if(confirm(warnText)){
+		$( "#" + formId ).submit();
+		return true;
+	}else{
+		showNotification("操作已取消", "", 2);
+		return false;
+	}
+}
+
+function SubmitAjaxConfirm(warnText){
+	if(confirm(warnText)){
+		return true;
+	}else{
+		showNotification("操作已取消", "", 2);
+		return false;
+	}
+}
+
+function MessageBox(text){
+	showNotification(text, "", 0);
+	//showNotification("Notification Title", "Notification Content", 0); // 0='info blue'; 1='success green'; >1='warning orange'; <1='error red';
+}
+</script>

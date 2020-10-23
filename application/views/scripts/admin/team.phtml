@@ -1,0 +1,58 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/expander.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+			<table width="100%" class="table-list">
+				<thead>
+					<tr>
+						<th style="text-align: center; width: 10px;">#</th>
+						<th>分组名称</th>
+						<th style="text-align: right;" colspan="999">
+							<a href="/admin/team.sort" class="btn">用户组排序</a>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="alt">
+						<form name="formNew" action="/admin/team" method="post" target="_self">
+							<input type="hidden" name="act" value="edit">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id" value="0">
+							<td>#</td>
+							<td><input type="text" name="title" value="" style="width: 60%;"></td>
+							<td style="text-align: right;"><input type="submit" value="新增" class="btn" style="height: 24px;"></td>
+							<td></td>
+						</form>
+					</tr>
+					<?php foreach ( $this->teamList as $managerKey => $value ):?>
+					<tr class="alt">
+						<form name="formEdit_<?php echo $value->GetId();?>" action="/admin/team" method="post" target="_self">
+							<input type="hidden" name="act" value="edit">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id" value="<?php echo $value->GetId();?>">
+							<input type="hidden" name="title" value="<?php echo $value->GetTitle();?>" style="width: 60%;">
+							<td id="GUID_<?php echo $value->GetId();?>">#</td>
+							<td><input type="text" name="title" value="<?php echo $value->GetTitle();?>" style="width: 60%;" /></td>
+							<td style="text-align: right;"><input type="submit" value="更新" class="btn" style="height: 24px;"></td>
+						</form>
+						<form name="formDelete_<?php echo $value->GetId();?>" action="/admin/team" method="post" target="_self">
+							<input type="hidden" name="act" value="delete">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id" value="<?php echo $value->GetId();?>">
+							<td style="text-align: right;"><input type="submit" value="删除" class="btn" style="height: 24px;"></td>
+						</form>
+					</tr>
+					<?php endforeach;?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

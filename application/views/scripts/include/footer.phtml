@@ -1,0 +1,78 @@
+	<link href="/styles/notification.css" rel="stylesheet" type="text/css" />
+	<script>
+	var myMessages = ['info','warning','error','success'];
+	function hideAllMessages()
+	{
+		var messagesHeights = new Array();
+		for(var i=0; i < myMessages.length; i++)
+		{
+			messagesHeights[i] = $('.' + myMessages[i]).outerHeight();
+			$('.' + myMessages[i]).css('top', -messagesHeights[i]);
+		}
+	}
+	
+	function showMessage(type)
+	{
+		$('.'+ type +'-trigger').click(function(){
+			hideAllMessages();
+			$('.'+type).animate({top:"0"}, 500);
+		});
+	}
+
+	function showNotification(title, text, type){
+		if(parseInt(type) == 0){
+			$('#infoTitle').text(title);
+			$('#infoContent').text(text);
+	        $('.info').animate({ top: "0" }, 500);
+	        setTimeout(function(){$('.info').click();}, 5000);
+		}else if(parseInt(type) == 1){
+			$('#successTitle').text(title);
+			$('#successContent').text(text);
+	        $('.success').animate({ top: "0" }, 500);
+	        setTimeout(function(){$('.success').click();}, 5000);
+		}else if(parseInt(type) > 1){
+			$('#warningTitle').text(title);
+			$('#warningContent').text(text);
+	        $('.warning').animate({ top: "0" }, 500);
+	        setTimeout(function(){$('.warning').click();}, 5000);
+		}else if(parseInt(type) < 0){
+			$('#errorTitle').text(title);
+			$('#errorContent').text(text);
+	        $('.error').animate({ top: "0" }, 500);
+	        setTimeout(function(){$('.error').click();}, 5000);
+		}
+	}
+	
+	$(document).ready(function(){
+		hideAllMessages();
+		for(var i=0; i < myMessages.length; i++)
+		{
+			showMessage(myMessages[i]);
+		}
+		$('.message').click(function(){
+			$(this).animate({top: -$(this).outerHeight()}, 500);
+		});
+	});
+	</script>
+	<div class="info message">
+		<h3 id="infoTitle"></h3>
+		<p id="infoContent"></p>
+	</div>
+	<div class="error message">
+		<h3 id="errorTitle"></h3>
+		<p id="errorContent"></p>
+	</div>
+	<div class="warning message">
+		<h3 id="warningTitle"></h3>
+		<p id="warningContent"></p>
+	</div>
+	<div class="success message">
+		<h3 id="successTitle"></h3>
+		<p id="successContent"></p>
+	</div>
+	<div id="dialog-loading">
+		<img alt="加载中..." src="/system/img/waiting.gif">
+	</div>
+</body>
+<?php echo $this->alert;?>
+</html>

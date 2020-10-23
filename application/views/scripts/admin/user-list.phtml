@@ -1,0 +1,200 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/expander.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<?php echo $this->render('include/progressbar.phtml'); ?>
+<script type="text/javascript">
+$(document).ready(function()  {
+	$( "#dialog-form" ).dialog({
+		autoOpen: false,
+		modal: true,
+		width: 400, 
+		height: parseInt(document.documentElement.clientHeight)-32,
+		position: 'center',
+		buttons: {
+			"关闭": function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+
+	$( "#dialog-instance" ).dialog({
+		autoOpen: false,
+		modal: true,
+		width: 400, 
+		height: parseInt(document.documentElement.clientHeight)-32,
+		position: 'center',
+		buttons: {
+			"关闭": function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+});
+
+function ShowRelationForm(userId){
+	$.post("/admin/user.relation.list.ajax",{"userId":userId},function(result){
+	    $( "#manageRelationAjax" ).html(result);
+		$( "#dialog-form" ).dialog("open");
+	});
+}
+
+function EditInstanceForm(userId){
+	$.post("/admin/instance",{"userId":userId},function(result){
+	    $( "#instanceAjax" ).html(result);
+		$( "#dialog-instance" ).dialog("open");
+	});
+}
+
+function ResetPassword(formId){
+	if(confirm("您确定要执行此操作？")){
+		$("#"+formId).submit()
+	}else{
+		showNotification("操作已取消", "", 2);
+	}
+}
+
+function SetWastage(formId){
+	if(confirm("您确定要执行此操作？")){
+		$("#"+formId).submit()
+	}else{
+		showNotification("操作已取消", "", 2);
+	}
+}
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+			<table width="100%" class="table-list">
+				<thead>
+					<tr>
+						<th style="text-align: left; width: 10px;">#</th>
+						<th style="text-align: left;">用户名</th>
+						<th style="text-align: left;">姓名</th>
+						<th style="text-align: left;">微信工号</th>
+						<th style="text-align: center;">所属分厂</th>
+						<th style="text-align: center;">用户分组</th>
+						<th style="text-align: right;" colspan="999">
+							<a href="/admin/user.sort" class="btn">用户排序</a>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="alt">
+						<form name="formNew" action="/admin/user.list" method="post" target="_self">
+							<input type="hidden" name="act" value="create">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id" value="0">
+							<td>#</td>
+							<td><input type="text" name="userName" value="" style="width: 150px;"></td>
+							<td><input type="text" name="name" value="" style="width: 150px;"></td>
+							<td><input type="text" name="token" value="" style="width: 150px;"></td>
+							<td style="text-align: center;">
+								<select name="branchId" style="width: 150px;">
+<?php								foreach ($this->branchList as $value):?>
+										<option value="<?php echo $value->GetId();?>"><?php echo $value->GetTitle();?></option>
+<?php								endforeach;?>
+								</select>
+							</td>
+							<td style="text-align: center;">
+								<select name="teamId" style="width: 150px;">
+									<option value="">请选择</option>
+<?php								foreach ($this->teamList as $value):?>
+										<option value="<?php echo $value->GetId();?>"><?php echo $value->GetTitle();?></option>
+<?php								endforeach;?>
+								</select>
+							</td>
+							<td style="text-align: center;">
+								<input type="submit" value="新增" class="btn" style="height: 24px;">
+							</td>
+							<td></td>
+						</form>
+					</tr>
+<?php				foreach ( $this->manager->GetItems () as $managerKey => $managerValue ):?>
+					<tr class="alt">
+						<form name="formEdit<?php echo $managerValue->GetId();?>" action="/admin/user.list" method="post" target="_self">
+							<input type="hidden" name="act" value="edit">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id" value="<?php echo $managerValue->GetId();?>">
+							<input type="hidden" name="userName" value="<?php echo $managerValue->GetUserName();?>" style="width: 150px;">
+							<td id="GUID_<?php echo $managerValue->GetId();?>">#</td>
+							<td><a href="/admin/user.relation.list?userId=<?php echo $managerValue->GetId();?>" target="_blank"><?php echo $managerValue->GetUserName();?></a></td>
+							<td>
+								<input type="text" name="name" value="<?php echo $managerValue->GetRealName();?>" style="width: 150px;">
+							</td>
+							<td>
+								<input type="text" name="token" value="<?php echo $managerValue->GetWeChatToken();?>" style="width: 150px;">
+							</td>
+							<td style="text-align: center;">
+								<select name="branchId" style="width: 150px;">
+<?php	 							foreach ($this->branchList as $value):?>
+<?php 									$branchId=$managerValue->GetBranch()==null ?"":$managerValue->GetBranch()->GetId();?>
+<?php 									if ($branchId==$value->GetId()):?>
+											<option value="<?php echo $value->GetId();?>" selected><?php echo $value->GetTitle();?></option>
+<?php 									else:?>
+											<option value="<?php echo $value->GetId();?>"><?php echo $value->GetTitle();?></option>
+<?php 									endif;?>
+<?php 								endforeach;?>
+								</select>
+							</td>
+							<td style="text-align: center;">
+								<select name="teamId" style="width: 150px;">
+									<option value="">请选择</option>
+<?php	 							foreach ($this->teamList as $value):?>
+<?php 									$teamId=$managerValue->GetTeam()==null ?"":$managerValue->GetTeam()->GetId();?>
+<?php 									if ($teamId==$value->GetId()):?>
+											<option value="<?php echo $value->GetId();?>" selected><?php echo $value->GetTitle();?></option>
+<?php 									else:?>
+											<option value="<?php echo $value->GetId();?>"><?php echo $value->GetTitle();?></option>
+<?php 									endif;?>
+<?php 								endforeach;?>
+								</select>
+							</td>
+							<td style="text-align: center;">
+								<input type="submit" value="更新" class="btn" style="height: 24px;">
+							</td>
+						</form>
+						<td style="text-align: center;">
+							<input type="button" value="角色" class="btn" onclick="EditInstanceForm('<?php echo $managerValue->GetId();?>')" style="float: right; height: 24px;" />
+							<input type="button" value="权限" class="btn" onclick="ShowRelationForm('<?php echo $managerValue->GetId();?>')" style="float: right; height: 24px;" />
+						</td>
+					</tr>
+					<tr class="operation" style="display: none;">
+						<td colspan="999">
+							<form id="formReset_<?php echo $managerValue->GetId();?>" name="formReset_<?php echo $managerValue->GetId();?>" action="/admin/user.list" method="post" target="_self" style="float: right;">
+							<input type="hidden" name="act" value="reset">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id"	value="<?php echo $managerValue->GetId();?>">
+								<input type="button" value="重置" class="btn" onclick="ResetPassword('formReset_<?php echo $managerValue->GetId();?>')" />
+							</form>
+							<form id="formDelete_<?php echo $managerValue->GetId();?>" name="formDelete_<?php echo $managerValue->GetId();?>" action="/admin/user.list" method="post" target="_self" style="float: right;">
+							<input type="hidden" name="act" value="delete">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id"	value="<?php echo $managerValue->GetId();?>">
+								<input type="button" value="离职" class="btn" onclick="SetWastage('formDelete_<?php echo $managerValue->GetId();?>')" />
+							</form>
+						</td>
+					</tr>
+<?php				endforeach;?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div id="dialog-form" title="编辑权限组信息">
+		<div id="manageRelationAjax"></div>
+	</div>
+	<div id="dialog-instance" title="编辑角色信息">
+		<div id="instanceAjax"></div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

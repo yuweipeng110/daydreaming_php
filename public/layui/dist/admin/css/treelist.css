@@ -1,0 +1,9 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+.freshbtn{width: 450px;margin: 30px;}
+.freshbtn button{display: block;margin:  0 auto}
+.eleTree{width: 650px; height:auto; margin:0; padding:0; background:#f3f3f3;}
+.secondsel{float:right;margin-right:120px;display: block!important;width: 15px;height: 15px;}

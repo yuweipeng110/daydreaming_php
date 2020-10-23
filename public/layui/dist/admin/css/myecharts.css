@@ -1,0 +1,54 @@
+/*monthBar.html页面的CSS 2018.08. 闫宣宣*/
+#type{padding: 9.3px 16px !important;height:37.5px!important;outline: none;}
+.layui-form-select dl{padding:0 !important;}
+.changecolor input{
+    background: #5FB878;
+    color:#fff;
+}
+.changecolor .layui-edge,.changecolor1 .layui-edge{
+    border-top-color: #fff!important;
+}
+.changecolor1 input{
+    background: #1E9FFF;
+    color:#fff;
+}
+.dialog-noBorder {
+    width: 80px;
+    height:40px;
+    margin: 0 auto;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    position: relative;
+    border: 1px solid #333;
+    background: #fff;
+}
+.dialog-noBorder span{
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: -20px;
+    width:0;
+    height:0;
+    border-width: 10px;
+    border-style:solid;
+    border-color:transparent #f48 transparent transparent;/*透明 灰 透明 透明 */
+    z-index: 10;
+}
+.dialog-noBorder span::after{
+    content: '';
+    display: block;
+    position: absolute;
+    top: -9.5px;
+    left: -7px;
+    width:0;
+    height:0;
+    border-width: 10px;
+    border-style:solid;
+    border-color:transparent #fff transparent transparent;/*透明 灰 透明 透明 */
+    /*border-width:10px 10px 10px 0;*/
+    z-index: 100;
+}
+.innertool div{color:#333;font-size:12px;font-family:"PingFang SC"}
+.innertool div:nth-child(2){margin-left: 4px}
+.innertool{position: absolute;top:8px;left:10px}

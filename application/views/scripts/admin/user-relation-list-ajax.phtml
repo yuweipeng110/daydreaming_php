@@ -1,0 +1,42 @@
+<script type="text/javascript">
+function SetRelation(organizeId,index){
+	comparisonId=$("#congregation_index_"+index).val();
+	$.post("/admin/user.set.relation.ajax",{"userId":'<?php echo $this->person->GetId();?>',"organizeId":organizeId,"comparisonId":comparisonId,"index":index},function(result){
+		ShowRelationForm('<?php echo $this->person->GetId();?>');
+	});
+}
+</script>
+<table style="width: 100%;" class="table-list">
+	<thead>
+		<tr class="alt">
+			<th width="5%" style="text-align: right;">#</th>
+			<th width="70%" style="text-align: left;">权限组名称</th>
+			<th width="15%" style="text-align: center;"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php $congregation = new System_Admin_Congregation($this->person);?>
+		<?php $congregationItems=$congregation->GetItems();?>
+<?php	$i=0;?>
+<?php	foreach ($this->managerConverge->GetItems() as $convergeValue):?>
+<?php
+		$congregationId = "";
+		foreach ( $congregationItems as $congregationValue ) {
+			if ($convergeValue->GetId () == $congregationValue->GetOrganize ()->GetId ()) {
+				$congregationId = $congregationValue->GetId ();
+				break;
+			}
+		}
+?>
+		<tr class="alt">
+			<td style="text-align: right;" id="GUID_<?php echo $convergeValue->GetId();?>">#</td>
+			<td style="text-align: left;"><?php echo $convergeValue->GetTitle()?></td>
+			<td style="text-align: center;">
+				<input type="hidden" id="congregation_index_<?php echo $i;?>" value="<?php echo $congregationId;?>" />
+				<input type="checkbox" name="relation" onclick="SetRelation('<?php echo $convergeValue->GetId ();?>','<?php echo $i;?>')" id="converge_index_<?php echo $i;?>" value="<?php echo $convergeValue->GetId ();?>" <?php echo strlen($congregationId) > 0 ? "checked" : "";?> />
+			</td>
+		</tr>
+		<?php $i++;?>
+<?php	endforeach;?>
+	</tbody>
+</table>

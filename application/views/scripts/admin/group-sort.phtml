@@ -1,0 +1,59 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<?php echo $this->render('include/sortable.phtml'); ?>
+<?php echo $this->render('include/ajaxform.phtml');?>
+<style>
+	#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+	#sortable li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; height: 1.5em; }
+	html>body #sortable li { height: 1.5em; line-height: 1.2em; }
+	.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+</style>
+<script type="text/javascript">
+$(function() {
+	var randomNumber = 0;
+	$( "#sortable" ).sortable({
+		placeholder: "ui-state-highlight"
+	});
+	$( "#sortable" ).on("sortstop", function(event, ui){
+		randomNumber ++;
+		$( "#rand" ).val(randomNumber);
+		$( "#groupSort" ).ajaxSubmit({
+			success: function(data) {
+			
+			}
+		});
+	});
+	$( "#sortable" ).disableSelection();
+});
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+			<p style="font-size: 24px; font-weight: 800; padding-left: 16px; width: 55%;">
+				功能组排序
+				<a href="/admin/group.list" target="_self" style="float: right;">返回</a>
+			</p>
+			<p>
+			<form id="groupSort" action="/admin/group.sort.process" target="_self" method="post">
+				<input type="hidden" name="act" value="sortable">
+				<input type="hidden" name="rand" value="" id="rand" />
+				<ul id="sortable">
+<?php			foreach ( $this->group->GetItems () as $groupKey => $groupValue ):?>
+					<li class="ui-state-default" style="padding-top: 12px; padding-left: 12px;">
+						<input type="hidden" name="groupId[]" value="<?php echo $groupValue->GetId();?>" />
+						<font style="float: left;"><?php echo $groupValue->GetTitle();?></font>
+						<font style="float: right;"><?php echo $groupValue->GetUrl();?></font>
+					</li>
+<?php			endforeach;?>
+				</ul>
+			</form>
+			</p>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

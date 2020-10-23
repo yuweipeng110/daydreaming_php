@@ -1,0 +1,44 @@
+----Linux--------
+更改root密码
+sudo passwd root
+sudo: 无法解析主机：ubuntu
+输入新的 UNIX 密码： 
+重新输入新的 UNIX 密码： 
+passwd：已成功更新密码
+GJ@ubuntu:~# su - root
+
+sudo apt-get install openssh-server
+--UPDATE & UPGRADE SYSTEM---------------------------------------
+sudo apt-get update
+sudo apt-get dist-upgrade
+--NGINX---------------------------------------------------------
+sudo apt-get install nginx
+sudo service nginx restart
+--MYSQL---------------------------------------------------------
+sudo apt-get install mysql-server mysql-client
+--phpmyadmin----------------------------------------------------
+sudo apt-get install phpmyadmin
+--PHP5-FPM------------------------------------------------------
+sudo apt-get install php5-fpm
+sudo service php5-fpm restart
+--PHP5----------------------------------------------------------
+sudo apt-get install php5 php5-cgi php5-cli php-pear php5-common php5-curl php5-dev php5-gd php5-mysql php5-sqlite php5-pspell php5-tidy php5-xmlrpc php5-xsl php5-imagick php5-imap php5-intl php5-mcrypt php5-memcache php5-memcached php5-ming php5-xcache
+sudo service php5-fpm restart
+--MEMCACHED-----------------------------------------------------
+sudo apt-get install memcached
+memcached -d -m 128 -p 11111 -u root
+--PDO_OCI-------------------------------------------------------
+sudo apt-get install php5 php5-dev php5-cli php-pear
+
+---------------------------------------
+
+sudo service php5-fpm restart
+--UPDATE & UPGRADE SYSTEM---------------------------------------
+sudo apt-get update
+sudo apt-get dist-upgrade
+
+--DESK TOP------------------------------------------------------
+sudo apt-get install ubuntu-desktop
+--UPDATE & UPGRADE SYSTEM---------------------------------------
+sudo apt-get update
+sudo apt-get dist-upgrade

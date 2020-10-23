@@ -1,0 +1,118 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<script type="text/javascript" src='/scripts/functions.js'></script>
+<style type="text/css">
+html { overflow-x: hidden; overflow-y: auto; }
+</style>
+</head>
+<body id="admin-left-body">
+	<div id="leftside">
+		<div class="user">
+			<p class="username" style="float:left;">
+<?php		if($this->user->GetId()==1):?>
+				<form id="changeBranchForm" action="/admin/menu" method="post" target="_self" style="float:left;">
+					<input type="hidden" name="rand" value="<?php echo Func::Randomkeys(4);?>" />
+					<input type="hidden" name="act" value="changeBranch" />
+					<select id="branchId" name="branchId" style="width:80px; margin-top:2px;" onchange="changeBranch()">
+					</select>
+				</form>
+<?php		else:?>
+				<?php echo $this->user->GetRealName();?>
+<?php		endif;?>
+			</p>
+			<p class="userbtn" style="float:left; margin-left:30px; margin-top:3px;">
+				<a href="#" title="" onclick="logoff('/admin/logoff')">退出</a>
+			</p>
+		</div>
+		<ul id="nav">
+			<li>
+				<a class="expanded heading"><span>系统管理</span></a>
+				<ul class="navigation">
+<?php 				if ($this->user->GetId () == 1):?>
+                    <li><a style="cursor: pointer;" title="系统信息"
+						onclick="ContentFrameSet('/admin/system')">系统信息</a></li>
+<?php 				endif;?>
+                    <li><a style="cursor: pointer;" title="修改密码"
+						onclick="ContentFrameSet('/admin/password')">修改密码</a></li>
+				</ul>
+			</li>
+<?php		foreach ($this->group->GetItems() as $key => $value):?>
+<?php			$menuList = $value->GetChildren();?>
+<?php			if($this->user->GetId() == 1):?>
+					<li>
+						<a class="collapsed heading"><span><?php echo $value->GetTitle();?></span></a>
+						<ul class="navigation">
+<?php 					$menuIdData = array();?>
+<?php					foreach($menuList as $menuKey => $menuValue):?>
+<?php
+							$isExists = false;
+							foreach($menuIdData as $menuId){
+								if($menuValue->GetId()==$menuId){
+									$isExists = true;
+								}
+							}
+							if(!$isExists){
+								$menuIdData[] = $menuValue->GetId();
+							}
+?>
+<?php 						if(!$isExists):?>
+								<li><a title="<?php echo $menuValue->GetTitle();?>" onclick="ContentFrameSet('<?php echo $menuValue->GetUrl();?>')" style="cursor: pointer;"><?php echo $menuValue->GetTitle();?></a></li>
+<?php 						endif;?>
+<?php					endforeach;?>
+                		</ul>
+                	</li>
+<?php			else:?>
+<?php				$hasItem = false;?>
+<?php				foreach ($menuList as $menuKey => $menuValue):?>
+<?php					foreach ($this->selfMenu as $selfMenu):?>
+<?php						if ($menuValue->GetId() == $selfMenu):?>
+<?php							$hasItem = true;?>
+<?php							break;?>
+<?php						endif;?>
+<?php					endforeach;?>
+<?php					if ($hasItem):?>
+<?php						break;?>
+<?php					endif;?>
+<?php				endforeach;?>
+<?php				if ($hasItem):?>
+						<li>
+							<a class="collapsed heading"><span><?php echo $value->GetTitle();?></span></a>
+							<ul class="navigation">
+<?php						foreach ($menuList as $menuKey => $menuValue):?>
+<?php 							$menuIdData = array();?>
+<?php							foreach ($this->selfMenu as $selfMenu):?>
+<?php								if ($menuValue->GetId() == $selfMenu):?>
+<?php
+										$isExists = false;
+										foreach($menuIdData as $menuId){
+											if($menuValue->GetId()==$menuId){
+												$isExists = true;
+											}
+										}
+										if(!$isExists){
+											$menuIdData[] = $menuValue->GetId();
+										}
+?>
+<?php 									if(!$isExists):?>
+											<li><a title="<?php echo $menuValue->GetTitle();?>" onclick="ContentFrameSet('<?php echo $menuValue->GetUrl();?>')" style="cursor: pointer;"><?php echo $menuValue->GetTitle();?></a></li>
+<?php									endif;?>
+<?php								endif;?>
+<?php							endforeach;?>
+<?php						endforeach;?>
+							</ul>
+						</li>
+<?php				endif;?>
+<?php			endif;?>
+<?php		endforeach;?>
+		</ul>
+	</div>
+<script type="text/javascript">
+function changeBranch(){
+	$("#changeBranchForm").submit();
+}
+</script>
+</body>
+</html>

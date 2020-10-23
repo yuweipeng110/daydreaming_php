@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title><?php echo SYSTEM_TITLE;?></title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<?php echo $this->render("manage/layui.phtml");?>
+<?php echo $this->render('include/chart.phtml'); ?>
+<script type="text/javascript">
+$(function () {
+    $('#statusCountPie').highcharts({
+    	chart: {
+            type: 'column'
+        },
+        credits: {
+            enabled:false
+        },
+        title: {
+            text: '<?php echo date("Y-m-d");?>订单业务金额统计'
+        },
+//         subtitle: {
+//             text: '数据来源: WorldClimate.com'
+//         },
+        xAxis: {
+            categories: <?php echo json_encode($this->categories); ?>,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '交易金额(元)'
+            }
+        },
+        tooltip: {
+            // head + 每个 point + footer 拼接成完整的 table
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>￥{point.y:.2f}',
+            footerFormat: '</b></td></tr></table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+        	series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '￥{point.y:.2f}'
+                }
+            }
+        },
+        series: <?php echo json_encode($this->series);?>
+    });
+});
+</script>
+</head>
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      
+      <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-card">
+          <div class="layui-card-header">成功订单总额
+            <span class="layui-badge layui-bg-blue layuiadmin-badge"></span>
+          </div>
+          <div class="layui-card-body layuiadmin-card-list">
+            <p class="layuiadmin-big-font"><?php echo $this->billStatistics->GetDaySuccessMoney();?>元</p>
+            <p>成功订单
+              <span class="layuiadmin-span-color"><?php echo $this->billStatistics->GetDaySuccessCount();?>笔 <i class="layui-inline layui-icon layui-icon-flag"></i></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-card">
+          <div class="layui-card-header">异常订单总额
+            <span class="layui-badge layui-bg-cyan layuiadmin-badge"></span>
+          </div>
+          <div class="layui-card-body layuiadmin-card-list">
+            <p class="layuiadmin-big-font">0.00元</p>
+            <p>异常订单
+              <span class="layuiadmin-span-color">0笔<i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-card">
+          <div class="layui-card-header">退款总额
+            <span class="layui-badge layui-bg-green layuiadmin-badge"></span>
+          </div>
+          <div class="layui-card-body layuiadmin-card-list">
+
+            <p class="layuiadmin-big-font"><?php echo $this->billStatistics->GetDayRefundedMoney();?>元</p>
+            <p>退款
+              <span class="layuiadmin-span-color"><?php echo $this->billStatistics->GetDayRefundedCount();?><i class="layui-inline layui-icon layui-icon-dollar"></i></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-card">
+          <div class="layui-card-header">退款失败总额
+            <span class="layui-badge layui-bg-orange layuiadmin-badge"></span>
+          </div>
+          <div class="layui-card-body layuiadmin-card-list">
+
+            <p class="layuiadmin-big-font"><?php echo $this->billStatistics->GetDayPaymentFailureMoney();?>元</p>
+            <p>退款失败
+              <span class="layuiadmin-span-color"><?php echo $this->billStatistics->GetDayPaymentFailureCount();?>笔<i class="layui-inline layui-icon layui-icon-user"></i></span>
+            </p>
+          </div>
+        </div>
+      </div>   
+      <div class="layui-col-sm12">      
+        <div class="layui-card">
+          <div class="layui-card-header">订单业务金额统计
+            <div class="layui-btn-group layuiadmin-btn-group">
+<!--               <a href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs">去年</a> -->
+<!--               <a href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs">今年</a> -->
+            </div>
+          </div>
+          <div class="layui-card-body">
+            <div class="layui-row">
+              <div class="layui-col-sm8">
+                  <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade">
+						<div class="statistics-div">
+							<div id="statusCountPie" class="statistics-chart" style="height:350px;"></div>
+						</div>
+                  </div>
+              </div>
+<?php 
+	$yearPercent = 0;
+	$monthPercent = 0;
+	$weekPercent = 0;
+	$yearPercent = $this->billStatistics->GetYearSuccessMoney() > 0 ? 100 : 0;
+	$monthPercent = $this->billStatistics->GetMonthSuccessMoney() / $this->billStatistics->GetYearSuccessMoney() * 100;
+	$weekPercent = $this->billStatistics->GetWeekSuccessMoney() / $this->billStatistics->GetYearSuccessMoney() * 100;
+?>
+              <div class="layui-col-sm4">
+		        <div class="layui-card">
+	                <div class="layuiadmin-card-list">
+	                  <span>年订单总额：<?php echo $this->billStatistics->GetYearSuccessMoney();?>元</span>
+	                  <div class="layui-progress layui-progress-big" lay-showPercent="yes">
+	                    <div class="layui-progress-bar" lay-percent="<?php echo $yearPercent;?>%"></div>
+	                  </div>
+	                </div>
+	                <div class="layuiadmin-card-list">
+	                  <span>月订单总额：<?php echo $this->billStatistics->GetMonthSuccessMoney();?>元</span>
+	                  <div class="layui-progress layui-progress-big" lay-showPercent="yes">
+	                    <div class="layui-progress-bar" lay-percent="<?php echo $monthPercent;?>%"></div>
+	                  </div>
+	                </div>
+	                <div class="layuiadmin-card-list">
+	                  <span>日订单总额：<?php echo $this->billStatistics->GetWeekSuccessMoney();?>元</span>
+	                  <div class="layui-progress layui-progress-big" lay-showPercent="yes">
+	                    <div class="layui-progress-bar" lay-percent="<?php echo $weekPercent;?>%"></div>
+	                  </div>
+	                </div>
+		        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      </div>
+    </div>
+  
+  <script src="/layui/dist/layuiadmin/layui/layui.js?t=1"></script>  
+  <script>
+  layui.config({
+    base: '/layui/dist/layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'console']);
+  </script>
+</body>
+</html>
+
+

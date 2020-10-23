@@ -1,0 +1,33 @@
+<?php $region = new Zend_Session_Namespace ( "region" );?>
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<script type="text/javascript">
+function reloadPage(){
+	window.location.reload();
+}
+window.setInterval("reloadPage()",60000);
+</script>
+</head>
+<body id="homepage">
+	<div id="header">
+		<span style="padding-left: 40px; padding-top: 15px; color: #ffffff; font-size: 24px; font-weight: bold" class="logo">
+		<?php echo SYSTEM_TITLE;?>
+		</span>
+		<!-- <a href="" title=""><img src="/system/img/farmerlogo.png" alt="Control Panel" class="logo" /></a> -->
+		<div id="searcharea">
+			<p class="left smltxt searchbtn" onclick="ContentFrameSet('/admin/system')">
+				<a href="#" style="color: #000; text-decoration: none; font-size: 12px;">系统信息</a>
+			</p>
+			<p class="left smltxt searchbtn" onclick="ContentFrameSet('/admin/password')">
+				<a href="#" style="color: #000; text-decoration: none; font-size: 12px;">修改密码</a>
+			</p>
+			<p class="left smltxt searchbtn" onclick="logoff('/admin/logoff')">
+				<a href="#" style="color: #000; text-decoration: none; font-size: 12px;">退出</a>
+			</p>
+		</div>
+	</div>
+</body>
+</html>

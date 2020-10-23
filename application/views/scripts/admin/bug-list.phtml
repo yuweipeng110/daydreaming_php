@@ -1,0 +1,66 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/expander.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<script type="text/javascript">
+function Delete(Id){
+	window.location.href="/admin/bug.list?act=delete&rand=<?php echo Func::RandomKeys(8);?>&Id="+Id;
+}
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+			<table width="100%">
+				<thead>
+					<tr>
+						<th width="5%">#</th>
+						<th width="35%">问题描述</th>
+						<th width="10%" style="text-align: center;">添加人</th>
+						<th width="10%" style="text-align: center;">添加时间</th>
+						<th width="10%" style="text-align: center;">修改人</th>
+						<th width="10%" style="text-align: center;">修改时间</th>
+						<th width="20%" style="text-align: center;"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<form name="formAdd" action="/admin/bug.list" method="post" target="_self">
+						<input type="hidden" name="act" value="add" />
+						<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+						<tr class="alt">
+							<td colspan="6"><textarea style="width: 99%; height: 60px;" name="bugInfo"></textarea></td>
+							<td style="text-align: right;"><input type="submit" value="新增" class="btn" style="height: 24px;" /></td>
+						</tr>
+					</form>
+					<?php foreach ( $this->bugList->GetItems () as $key => $value ):?>
+					<form name="formEdit<?php echo $value->GetId();?>" action="/admin/bug.list" method="post" target="_self">
+						<input type="hidden" name="act" value="update" />
+						<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+						<input type="hidden" name="Id" value="<?php echo $value->GetId();?>" />
+						<tr class="alt">
+							<td id="GUID_<?php echo $value->GetId();?>">#</td>
+							<td><?php echo $value->GetBugInfo();?></td>
+							<td style="text-align: center;"><?php echo $value->GetBugUser()->GetUserName();?></td>
+							<td style="text-align: center;"><?php echo $value->GetBugTime();?></td>
+							<td style="text-align: center;"><?php echo $value->GetOverCoder()->GetUserName();?></td>
+							<td style="text-align: center;"><?php echo $value->GetOverTime();?></td>
+							<td style="text-align: right;">
+							<?php if($value->GetOverCoder()->GetId() == 0 || $value->GetOverCoder()->GetId() == $this->user->GetId()):?>
+							<input type="submit" value="更新" class="btn" style="height: 24px;" />
+							<?php endif;?>
+							<?php if($value->GetBugUser()->GetId()==$this->user->GetId()):?>
+							<input type="button" value="删除" class="btn" onclick="Delete('<?php echo $value->GetId();?>')" style="height: 24px;" />
+							<?php endif?>
+						</td>
+						</tr>
+					</form>
+					<?php endforeach;?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

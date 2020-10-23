@@ -1,0 +1,28 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Admin Template</title>
+<link type="text/css" href="/js/ui/themes/base/jquery.ui.all.css" rel="stylesheet" />
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<script type="text/javascript">
+$(function() {
+	$( "#result" ).dialog({
+		modal: true,
+		resizable: false,
+		width: 400,
+		height: 100
+	});
+	$('div .ui-dialog-titlebar-close').hide();
+});
+</script>
+</head>
+<body>
+	<div class="contentcontainer">
+		<div id="result" title="系统消息">
+			<font color='#FF0000'>参数传入错误，请重试。</font>
+		</div>
+	</div>
+</body>
+<?php echo $this->render('include/footer.phtml'); ?>

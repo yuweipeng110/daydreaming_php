@@ -1,0 +1,14 @@
+/*index lefttabhover* 2018.08.09 用于首页导航栏 hover 颜色切换/
+ * 
+ */
+.left-nav #nav li:hover > a,.left-nav #nav li:hover > span {
+    background: #1E9FFF;
+    color: #fff;
+}
+
+/*当hover有二级子元素时，二级子元素展现*/
+.menu_two li {
+     padding-left: 0px !important; 
+}
+ 
+

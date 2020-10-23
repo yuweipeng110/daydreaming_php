@@ -1,0 +1,67 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<?php echo $this->render('include/sortable.phtml'); ?>
+<?php echo $this->render('include/ajaxform.phtml');?>
+<style>
+<?php foreach ( $this->group->GetItems () as $groupKey => $groupValue ):?>
+	#sortable_<?php echo $groupValue->GetId();?> { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+	#sortable_<?php echo $groupValue->GetId();?> li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; height: 1.5em; }
+	html>body #sortable_<?php echo $groupValue->GetId();?> li { height: 1.5em; line-height: 1.2em; }
+<?php endforeach;?>
+	.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+</style>
+<script type="text/javascript">
+$(function() {
+	var randomNumber = 0;
+<?php foreach ( $this->group->GetItems () as $groupKey => $groupValue ):?>
+	$( "#sortable_<?php echo $groupValue->GetId();?>" ).sortable({
+		placeholder: "ui-state-highlight"
+	});
+	$( "#sortable_<?php echo $groupValue->GetId();?>" ).on("sortstop", function(event, ui){
+		randomNumber ++;
+		$( "#rand_<?php echo $groupValue->GetId();?>" ).val(randomNumber);
+		$( "#group_<?php echo $groupValue->GetId();?>" ).ajaxSubmit({
+			success: function(data) {
+			
+			}
+		});
+	});
+	$( "#sortable_<?php echo $groupValue->GetId();?>" ).disableSelection();
+<?php endforeach;?>
+});
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+<?php foreach ( $this->group->GetItems () as $groupKey => $groupValue ):?>
+		<div class="contentbox">
+			<p style="font-size: 24px; font-weight: 800; padding-left: 16px; width: 55%;">
+				<?php echo $groupValue->GetTitle();?>
+				<a href="/admin/menu.list" target="_self" style="float: right;">返回</a>
+			</p>
+			<p>
+			<form id="group_<?php echo $groupValue->GetId();?>" action="/admin/menu.sort.process" target="_self" method="post">
+				<input type="hidden" name="act" value="sortable">
+				<input type="hidden" name="rand" value="" id="rand_<?php echo $groupValue->GetId();?>" />
+				<input type="hidden" name="groupId" value="<?php echo $groupValue->GetId();?>" />
+				<ul id="sortable_<?php echo $groupValue->GetId();?>">
+	<?php		$menuList = $groupValue->GetChildren ();?>
+	<?php		foreach ( $menuList as $menuKey => $menuValue ):?>
+					<li class="ui-state-default" style="padding-top: 12px; padding-left: 12px;">
+						<input type="hidden" name="menuId[]" value="<?php echo $menuValue->GetId();?>" />
+						<font style="float: left;"><?php echo $menuValue->GetTitle();?></font>
+						<font style="float: right;"><?php echo $menuValue->GetUrl();?></font>
+					</li>
+	<?php		endforeach;?>
+				</ul>
+			</form>
+			</p>
+		</div>
+<?php endforeach;?>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

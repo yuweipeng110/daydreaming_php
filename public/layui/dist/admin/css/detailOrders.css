@@ -1,0 +1,5 @@
+/*订单详情页面 2018.08.04*/
+#deOrderList td,#deOrderList th{text-align:center;}
+#deOrderList thead tr{
+    background-color: #009688;
+}

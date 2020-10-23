@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+ <title>websocket</title>
+<?php echo $this->render('include/js.phtml'); ?>
+ </head>
+ <body>
+ <input id="text" value="">
+ <input type="submit" value="send" onclick="start()">
+ <input type="submit" value="close" onclick="close()">
+<div id="msg"></div>
+<script type="text/javascript">
+var url = 'http://192.168.0.200:8081/service/user/add-store';
+var url1 = '/service/user/add-store';
+$.post(url1,{
+	'address': '和谐家园一区',
+	'passWord': '123456',
+	'phoneNumber': '15598476380',
+	'status': true,
+	'storeName': '测试门店',
+	'userName': 'xiaoyuge',
+	'realName': '于维鹏'
+},function(result){
+	console.log(result);
+},'json');
+</script>
+ </body>
+</html>

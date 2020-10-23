@@ -1,0 +1,92 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/expander.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+			<table width="100%" class="table-list">
+				<thead>
+					<tr>
+						<th style="text-align: center; width: 10px;">#</th>
+						<th>功能名称</th>
+						<th>功能地址</th>
+						<th>所属分组</th>
+						<th></th>
+						<th></th>
+						<th style="text-align: right;"><a href="/admin/menu.sort" class="btn">功能排序</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="alt">
+						<form name="formNew" action="/admin/menu.list" method="post" target="_self">
+							<input type="hidden" name="act" value="edit">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id" value="0">
+							<td>#</td>
+							<td><input type="text" name="title" value="" style="width: 90%;"></td>
+							<td><input type="text" name="url" value="" style="width: 90%;"></td>
+							<td>
+								<select name="parentId" style="width: 100%;">
+								<?php foreach($this->group->GetItems() as $optionKey=>$optionValue):?>
+									<option value="<?php echo $optionValue->GetId();?>"><?php echo $optionValue->GetTitle();?></option>
+								<?php endforeach;?>
+								</select>
+							</td>
+							<td></td>
+							<td style="text-align: right;">
+								<input type="submit" value="新增" class="btn" style="height: 24px;">
+							</td>
+							<td></td>
+						</form>
+					</tr>
+					<?php foreach ( $this->group->GetItems () as $groupKey => $groupValue ):?>
+					<?php $menuList = $groupValue->GetChildren ();?>
+					<?php foreach ( $menuList as $menuKey => $menuValue ):?>
+					<tr class="alt">
+						<form name="formEdit<?php echo $menuValue->GetId();?>" action="/admin/menu.list" method="post" target="_self">
+							<input type="hidden" name="act" value="edit">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id" value="<?php echo $menuValue->GetId();?>">
+							<td id="GUID_<?php echo $menuValue->GetId();?>">#</td>
+							<td><input type="text" name="title" value="<?php echo $menuValue->GetTitle();?>" style="width: 90%;"></td>
+							<td><input type="text" name="url" value="<?php echo $menuValue->GetUrl();?>" style="width: 90%;"></td>
+							<td>
+								<select name="parentId" style="width: 100%;">
+								<?php foreach($this->group->GetItems() as $optionKey=>$optionValue):?>
+								<?php if($menuValue->GetParentMenu()->GetId() == $optionValue->GetId()):?>
+									<option value="<?php echo $optionValue->GetId();?>" selected><?php echo $optionValue->GetTitle();?></option>
+								<?php else:?>
+									<option value="<?php echo $optionValue->GetId();?>"><?php echo $optionValue->GetTitle();?></option>
+								<?php endif;?>
+								<?php endforeach;?>
+								</select>
+							</td>
+							<td style="text-align: right">
+								<!--<input type="button" value="置顶" class="btn" onclick="SetTop('<?php echo $groupValue->GetId();?>')">-->
+							</td>
+							<td style="text-align: right">
+								<input type="submit" value="更新" class="btn" style="height: 24px;">
+							</td>
+						</form>
+						<form name="formDelete<?php echo $menuValue->GetId();?>" action="/admin/menu.list" method="post" target="_self">
+							<input type="hidden" name="act" value="delete">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="Id" value="<?php echo $menuValue->GetId();?>">
+							<td style="text-align: right">
+								<input type="submit" value="删除" class="btn" style="height: 24px;">
+							</td>
+						</form>
+					</tr>
+					<?php endforeach;?>
+					<?php endforeach;?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

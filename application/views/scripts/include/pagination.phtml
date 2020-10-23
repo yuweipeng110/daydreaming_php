@@ -1,0 +1,38 @@
+<?php if ($this->pageCount): ?>
+<div class="pages">
+
+	<!-- 上一页 -->
+<?php if (isset($this->previous)): ?>
+&nbsp;<a href="<?php echo $this->url(array('page'=>$this->first)); ?>">首
+		页</a> &nbsp;<a
+		href="<?php echo $this->url(array('page' => $this->previous)); ?>">&lt;&lt;上一页</a> 
+<?php else: ?>
+&nbsp;<a>首 页</a> &nbsp;<a>上一页</a>
+<?php endif; ?>
+
+<!-- 分页各页码 -->
+
+<?php foreach ($this->pagesInRange as $page): ?>
+	<?php if ($page != $this->current): ?>
+	<?php
+			$url = array (
+					'page' => $page 
+			) + ( array ) $this->params;
+			?>
+	&nbsp;<a href="<?php echo $this->url($url); ?>"><?php echo $page; ?></a>
+	<?php else: ?>
+	&nbsp;<a class="on"><?php echo $page; ?></a>
+	<?php endif; ?>
+<?php endforeach; ?>
+
+<!-- 下一页 -->
+<?php if (isset($this->next)): ?>
+<?php $url = array('page'=>$this->next) + (array)$this->params;?>
+&nbsp;<a href="<?php echo $this->url($url); ?>">下一页&gt;&gt;</a> &nbsp;<a
+		href="<?php echo $this->url(array('page'=>$this->last)); ?>">尾 页</a> 
+<?php else: ?>
+&nbsp;<a>下一页</a> &nbsp;<a>尾 页</a>
+<?php endif; ?>
+&nbsp;共<a><?php echo $this->pageCount;?></a> 页
+</div>
+<?php endif; ?>

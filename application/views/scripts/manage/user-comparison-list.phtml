@@ -1,0 +1,81 @@
+<?php echo $this->render('manage/header.phtml');?>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<?php echo $this->render("manage/layui.phtml");?>
+</head>
+<body>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<!-- 
+			<div class="layui-collapse" lay-filter="test" style="margin-bottom: 10px;">
+				<div class="layui-colla-item">
+				</div>
+			</div>
+			 -->
+		        <div style="padding-bottom: 10px;">
+<!-- 					<button class="layui-btn layuiadmin-btn-admin" data-type="categoryAdd" id="add">添加</button> -->
+				</div>
+				<table id="tableList" lay-filter='tableList'></table>
+				<script type="text/html" id="checkboxTpl">
+					<!-- 这里的 checked 的状态只是演示 -->
+					<input type="checkbox" name="lock" value="{{d.organizeId}}" comparisonId='{{d.comparisonId}}' class="layui-btn-xs" lay-skin="switch" lay-text="开启|关闭" lay-filter="lockDemo" {{ d.checked == true ? 'checked' : '' }}>
+				</script>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+layui.use(['form', 'jquery', 'table', 'layer'], function () {
+	var form = layui.form,$ = layui.jquery,layer = layui.layer,table = layui.table;
+	var loading=layer.msg('数据加载中...',{icon:16});
+	table =  $.extend(table, {config: {checkName: 'checked'}});
+	table.render({
+		elem: '#tableList',
+	    even: true,
+		page: true,
+		limit: 15,
+		limits: [15],
+		url: '/manage/user-process?act=userComparisonList&userId=<?php echo $this->userId?>',
+		cols: [[
+// 			{field: 'id', title: 'ID',align:'left'},
+			{field: 'title', title: '权限组名称',align:'left'},
+			{field: 'lock', title:'是否开启', align:'center', templet: '#checkboxTpl', unresize: true},
+		]],
+		id: 'tableList',
+		done:function(res, page, count){
+			layer.close(loading);
+		}
+	});
+	//监听锁定操作
+	form.on('switch(lockDemo)', function(obj){
+		$.ajax({
+			url: "/manage/user-process",
+			data: {
+				act:"userComparisonEdit",
+				userId:<?php echo $this->userId;?>,
+				comparisonId:$(this).attr("comparisonId"),
+				organizeId:this.value
+			},
+			type: 'POST',
+			dataType: "json",
+			success: function(data){
+				if (data.code == 0){
+					layer.msg(data.msg, {icon: 1,time:3000},function () {
+						var index = parent.layer.getFrameIndex(window.name);
+//	 						parent.layer.close(index);
+					});
+                    table.reload('tableList');
+				} else{
+					layer.msg(data.msg, {icon: 5,time: 3000});
+				}
+//	 				table.reload("tableList");
+			}
+		});
+// 		layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+	});
+});
+</script>
+<?php echo $this->render('manage/footer.phtml'); ?>

@@ -1,0 +1,78 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/expander.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+			<form name="form1" action="/admin/user.relation.list" method="post" target="_self">
+				<input type="hidden" name="act" value="edit">
+				<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+				<input type="hidden" name="userId" value="<?php echo $this->user->GetId();?>">
+				<table width="100%" id="tableRelation" class="table-list">
+					<thead>
+						<tr>
+							<th width="20%" colspan="2" style="text-align: center;"><input type="submit" value="更新（访问权限 / 读写权限）" class="btn" style="height: 24px;"></th>
+							<th width="30%">功能名称</th>
+							<th width="30%">功能地址</th>
+							<th width="20%">所属分组</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach ( $this->group->GetItems () as $groupKey => $groupValue ):?>
+					<?php $menuList = $groupValue->GetChildren ();?>
+					<?php foreach ( $menuList as $menuKey => $menuValue ):?>
+					<tr class="alt">
+						<td style="text-align:center;">
+						<input type="checkbox" name="relation[]" value="<?php echo $menuValue->GetId();?>" 
+						<?php
+						$isChecked = false;
+						foreach ( $this->userRelation->GetMenus () as $k => $v ) {
+							if ($menuValue->GetId () == $v->GetId ()) {
+								$isChecked = true;
+								break;
+							}
+						}
+						echo $isChecked ? "checked" : "";
+						?> />
+						</td>
+						<td style="text-align:center;">
+						<?php 
+						$readonly = false;
+						foreach ($this->userRelation->GetRelation() as $k => $v){
+							if($menuValue->GetId() == $v->GetMenu()->GetId()){
+								$readonly = $v->GetReadOnly();
+								break;
+							}
+						}
+						?>
+						<?php if($isChecked):?>
+							<input type="checkbox" name="readonly[]" value="<?php echo $menuValue->GetId();?>" <?php echo $readonly ? "checked":""; ?> />
+						<?php endif;?>
+						</td>
+						<td><?php echo $menuValue->GetTitle();?></td>
+						<td><?php echo $menuValue->GetUrl();?></td>
+						<td class="center">
+						<?php
+						foreach($this->group->GetItems() as $k => $v){ 
+							if($menuValue->GetParentMenu()->GetId() == $v->GetId()){
+								echo $v->GetTitle();
+								break;
+							}
+						}
+						?>
+						</td>
+					</tr>
+					<?php endforeach;?>
+					<?php endforeach;?>
+				</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>

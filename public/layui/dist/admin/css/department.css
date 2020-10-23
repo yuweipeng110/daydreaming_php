@@ -1,0 +1,6 @@
+/*account 下的 department.html*/
+/*.page-content{ margin-top: 40px; }*/
+.page-xx{padding-top: 20px; padding-right: 20px}
+.page-xx .height-full{overflow: hidden; width: auto; height: 100%;}
+.page-xx input::-ms-input-placeholder{text-align: center;}
+.page-xx input::-webkit-input-placeholder{text-align: center;}

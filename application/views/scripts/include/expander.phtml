@@ -1,0 +1,34 @@
+<script type="text/javascript">
+$(function() {
+	ReloadExpander();
+});
+
+function ReloadExpander(){
+	$( "tbody" ).children( ".operation" ).hide();
+	
+	$( "tbody" ).children( ".alt" ).bind( "click", function(){
+		var currentIndex = parseInt($(this).index());
+		var operationIndex = parseInt($(this).index() + 1);
+	
+		$(this).parent().children( ".operation" ).each(function(){
+			if($(this).index() == operationIndex){
+				if($(this).find("input").length){
+					$(this).css("background-color", "#98FB98");
+					$(this).show("fast");
+				}
+			}else{
+				$(this).css("background-color", "");
+				$(this).hide();
+			}
+		});
+		
+		$(this).parent().children( ".alt" ).each(function(){
+			if($(this).index() == currentIndex){
+				$(this).css("background-color", "#98FB98");
+			}else{
+				$(this).css("background-color", "");
+			}
+		});
+	});
+}
+</script>

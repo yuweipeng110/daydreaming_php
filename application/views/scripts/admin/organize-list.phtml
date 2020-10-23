@@ -1,0 +1,136 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/expander.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<script type="text/javascript">
+var editPurviewForm = "editPurview_";
+var editUsersForm = "editUsers_";
+
+$(document).ready(function()  {
+	$( "#dialog-purview" ).dialog({
+		autoOpen: false,
+		modal: true,
+		width: 800, 
+		height: parseInt(document.documentElement.clientHeight)-32,
+		position: 'center',
+		buttons: {
+			"更新权限": function() {
+				$( "#" + editPurviewForm ).submit();
+			},
+			"关闭": function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+
+	$( "#dialog-users" ).dialog({
+		autoOpen: false,
+		modal: true,
+		width: 800,
+		height: parseInt(document.documentElement.clientHeight)-32,
+		position: 'center',
+		buttons: {
+			"关闭": function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+});
+
+function EditPurview(organizeId, organizeTitle){
+	editPurviewForm = "editPurview_" + organizeId;
+	$( "#dialog-purview" ).attr("title", organizeTitle);
+	$.post("/admin/organize.purview.list",{"organizeId": organizeId},function(data){
+	    $( "#dialog-purview" ).html(data);
+		$( "#dialog-purview" ).dialog( "open" );
+	});
+}
+
+function ShowUser(organizeId, organizeTitle){
+	editUsersForm = "editUsers_" + organizeId;
+	$( "#dialog-users" ).attr("title", organizeTitle);
+	$.post("/admin/organize.user.list",{"organizeId": organizeId},function(data){
+	    $( "#dialog-users" ).html(data);
+		$( "#dialog-users" ).dialog( "open" );
+	});
+}
+
+function DeleteOrganize(formId){
+	if(confirm("您确定要执行此操作？")){
+		$("#"+formId).submit()
+	}else{
+		showNotification("操作已取消", "", 2);
+	}
+}
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+			<table class="table-list" style="width: 100%">
+				<thead>
+					<tr>
+						<th width="5%">#</th>
+						<th width="60%">名称</th>
+						<th width="10%"></th>
+						<th width="10%"></th>
+						<th width="10%"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="alt">
+						<form name="formNew" action="/admin/organize.list" method="post" target="_self">
+							<input type="hidden" name="act" value="edit">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="organizeId" value="">
+							<td>#</td>
+							<td><input type="text" name="title" value="" style="width: 60%;"></td>
+							<td><input type="submit" value="新增" class="btn" style="height: 24px;"></td>
+							<td></td>
+							<td></td>
+						</form>
+					</tr>
+					<?php foreach ( $this->converge->GetItems () as $managerKey => $managerValue ):?>
+					<tr class="alt">
+						<form id="formEdit_<?php echo $managerValue->GetId();?>" name="formEdit_<?php echo $managerValue->GetId();?>" action="/admin/organize.list" method="post" target="_self">
+							<input type="hidden" name="act" value="edit">
+							<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+							<input type="hidden" name="organizeId" value="<?php echo $managerValue->GetId();?>">
+							<input type="hidden" name="title" value="<?php echo $managerValue->GetTitle();?>" style="width: 60%;">
+							<td id="GUID_<?php echo $managerValue->GetId();?>">#</td>
+							<td><input type="text" name="title" value="<?php echo $managerValue->GetTitle();?>" style="width: 60%;" /></td>
+							<td><input type="submit" value="更新" class="btn" style="height: 24px;"></td>
+						</form>
+						<td colspan="2">
+							<input type="button" value="权限" onclick="EditPurview('<?php echo $managerValue->GetId();?>', '<?php echo $managerValue->GetTitle();?>')" class="btn" style="float: right; height: 24px;"/>
+							<input type="button" value="人员" onclick="ShowUser('<?php echo $managerValue->GetId();?>', '<?php echo $managerValue->GetTitle();?>')" class="btn" style="float: right; height: 24px;"/>
+						</td>
+					</tr>
+					<tr class="operation" style="display: none;">
+						<td colspan="999">
+							<form id="formDelete_<?php echo $managerValue->GetId();?>" name="formDelete_<?php echo $managerValue->GetId();?>" action="/admin/organize.list" method="post" target="_self" style="float: right;">
+								<input type="hidden" name="act" value="delete">
+								<input type="hidden" name="rand" value="<?php echo Func::RandomKeys(8);?>" />
+								<input type="hidden" name="organizeId" value="<?php echo $managerValue->GetId();?>">
+								<input type="button" value="删除" class="btn" onclick="DeleteOrganize('formDelete_<?php echo $managerValue->GetId();?>')">
+							</form>
+						</td>
+					</tr>
+					<?php endforeach;?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div id="dialog-purview"></div>
+	<div id="dialog-users"></div>
+<?php echo $this->render('include/footer.phtml'); ?>

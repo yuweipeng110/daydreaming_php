@@ -1,0 +1,35 @@
+<script src="/js/ui/ui/jquery.ui.core.js"></script>
+<script src="/js/ui/ui/jquery.ui.widget.js"></script>
+<script src="/js/ui/ui/jquery.ui.effect.js"></script>
+<script src="/js/ui/ui/jquery.ui.mouse.js"></script>
+
+<script src="/js/ui/ui/jquery.ui.button.js"></script>
+<script src="/js/ui/ui/jquery.ui.draggable.js"></script>
+<script src="/js/ui/ui/jquery.ui.position.js"></script>
+<script src="/js/ui/ui/jquery.ui.resizable.js"></script>
+<script src="/js/ui/ui/jquery.ui.tooltip.js"></script>
+<script src="/js/ui/ui/jquery.ui.dialog.js"></script>
+
+<script src="/js/ui/ui/jquery.ui.effect-explode.js"></script>
+<script type="text/javascript">
+$(function(){
+	$( "#dialog-loading" ).dialog({
+		autoOpen: false,
+		modal: true,
+		width: "auto", 
+		height: "auto",
+		position: 'center',
+		closeOnEscape: false,
+		resizable: false,
+		buttons: null,
+		open: function (event, ui) {
+			$(".ui-dialog-titlebar-close", $(this).parent()).hide();
+		}
+	});
+	
+	$(document).tooltip({
+	
+	});
+});
+
+</script>

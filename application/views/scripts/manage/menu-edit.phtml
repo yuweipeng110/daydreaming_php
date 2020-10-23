@@ -1,0 +1,92 @@
+<?php echo $this->render('manage/header.phtml');?>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<?php echo $this->render("manage/layui.phtml");?>
+</head>
+<body>
+<?php $menu = new System_Admin_Menu($this->menuId);?>
+<style type="text/css">
+.layui-form-label{
+	width: 90px;
+}
+</style>
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<div class="x-body">
+				<h3>基础信息</h3><hr/>
+					<form class="layui-form" action="/manage/menu-process" id="formEdit" method="post" target="_self" enctype="multipart/form-data">
+						<input type="hidden" name="act" value="editMenu"/>
+						<input type="hidden" name="rand" value="<?php echo Func::Randomkeys(4);?>"/>
+						<input type="hidden" name="menuId" value="<?php echo $menu->GetId();?>" />
+						<div class="layui-form-item">
+							<label class="layui-form-label">所属分组</label>
+							<div class="layui-input-inline">
+								<select name="parentId">
+									<option value="0">根级</option>
+<?php 								foreach ($this->group->GetItems() as $key => $value):?>
+									<option value="<?php echo $value->GetId();?>" 
+										<?php echo $menu->GetParentMenu() == null ? "" : $menu->GetParentMenu()->GetId() == $value->GetId() ? "selected=\"\"" : ""?> ><?php echo $value->GetTitle();?>
+									</option>
+<?php 								endforeach;?>
+								</select>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">标题</label>
+							<div class="layui-input-inline">
+								<input type="text" name="title" class="layui-input" value="<?php echo $menu->GetTitle();?>" />
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">功能地址</label>
+							<div class="layui-input-inline">
+								<input type="text" name="url" class="layui-input" value="<?php echo $menu->GetUrl();?>" />
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label"></label>
+							<button class="layui-btn" lay-filter="edit" lay-submit="">提交</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+layui.use(['form', 'jquery', 'table', 'layer'], function () {
+	var form = layui.form,$ = layui.jquery,layer = layui.layer,table = layui.table;
+	form.render();
+	form.on('submit(edit)', function(data){
+		//$("#farmerForm").serialize()
+		$.ajax({
+			url: $("#formEdit").attr("action"),
+			data: data.field,
+			type: 'POST',
+			dataType: "json",
+			success: function(data){
+				$("input[name='rand']").val("<?php echo Func::Randomkeys(4);?>");
+				if (data.code == 0){
+					layer.msg(data.msg, {icon: 1,time:3000},function () {
+						var index = parent.layer.getFrameIndex(window.name);
+// 						parent.layer.close(index);
+					});
+					//刷新父级列表
+					;
+// 					parent.layui.renderTable();
+//                     parent.layui.table.reload('tableList');
+				} else{
+					layer.msg(data.msg, {icon: 5,time: 3000});
+				}
+// 				table.reload("tableList");
+			}
+		});
+		setTimeout('window.parent.location.reload()', 2000);
+		return false;
+	});
+});
+</script>
+<?php echo $this->render('manage/footer.phtml'); ?>

@@ -1,0 +1,74 @@
+<?php echo $this->render('include/header.phtml'); ?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php echo $this->render('include/css.phtml'); ?>
+<?php echo $this->render('include/js.phtml'); ?>
+<?php echo $this->render('include/table.phtml'); ?>
+<?php echo $this->render('include/ui.phtml'); ?>
+<?php echo $this->render('include/treetable.phtml'); ?>
+<script type="text/javascript">
+$(document).ready(function()  {
+	$("#tableOption").treeTable({
+		clickableNodeNames:true,
+		persist:true
+	});
+});
+
+function NewPart(parentId,optionId){
+	var title = $('#title_'+parentId).val();
+	window.location.href="/admin/option.list?act=edit&rand=<?php echo Func::RandomKeys(8);?>&parent="+parentId+"&Id="+optionId+"&title="+title;
+}
+
+function EditPart(parentId,optionId){
+	var title = $('#title_'+parentId).val();
+	window.location.href="/admin/option.list?act=edit&rand=<?php echo Func::RandomKeys(8);?>&parent="+parentId+"&Id="+optionId+"&title="+title;
+}
+
+function RemovePart(optionId){
+	if(confirm('您确定要执行此操作么？')){
+		window.location.href="/admin/option.list?act=delete&rand=<?php echo Func::RandomKeys(8);?>&Id="+optionId;
+	}else{
+		showNotification("操作已取消", "", 2);
+	}
+}
+</script>
+</head>
+<?php echo $this->render('include/title.phtml');?>
+	<div class="contentcontainer">
+		<div class="contentbox">
+			<table width="100%" id="tableOption">
+				<tbody>
+					<tr id="node-">
+						<td>选项列表</td>
+						<td style="width:100px;"></td>
+					</tr>
+<?php
+function makeTree(System_Admin_Option $option, System_Admin_Option $parent) {
+	echo "<tr id=\"node-" . $option->GetId () . "\" class=\"child-of-node-" . $parent->GetId () . " alt\">\n";
+	echo "	<td>" . $option->GetTitle () . "</td>";
+	echo "	<td class=\"center\"><input type=\"button\" onclick=\"RemovePart('" . $option->GetId () . "')\" value=\"删除\" class=\"btn\" style=\"height: 24px;\"></td>\n";
+	echo "</tr>\n";
+	$children = $option->GetChildren ();
+	if (count ( $children ) > 0) {
+		foreach ( $children as $childrenKey => $childrenValue ) {
+			makeTree ( $childrenValue, $option );
+		}
+	}
+	echo "<tr id=\"node-" . $option->GetId () . "-new\" class=\"child-of-node-" . $option->GetId () . " alt\">\n";
+	echo "	<td>&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"text\" value=\"\" name=\"title\" id=\"title_" . $option->GetId () . "\"></td>";
+	echo "	<td class=\"center\"><input type=\"button\" onclick=\"NewPart('" . $option->GetId () . "','')\" value=\"新增\" class=\"btn\" style=\"height: 24px;\"></td>";
+	echo "</tr>\n";
+}
+?>
+<?php foreach($this->tree->GetItems() as $treeKey=>$treeValue):?>
+<?php makeTree($treeValue, new System_Admin_Option());?>
+<?php endforeach;?>
+					<tr id="node-new" class="child-of-node- alt">
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" value="" name="title" id="title_"></td>
+						<td class="center"><input type="button" onclick="NewPart('')" value="新增" class="btn" style="height: 24px;"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+<?php echo $this->render('include/footer.phtml'); ?>
