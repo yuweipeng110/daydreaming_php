@@ -2,7 +2,7 @@
 class Business_Webpage_Signin {
 	
 	/**
-	 * 登陸驗證
+	 * 登陆验证
 	 *
 	 * @param string $userName        	
 	 * @param string $password        	

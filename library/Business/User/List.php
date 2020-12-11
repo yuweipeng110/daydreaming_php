@@ -44,33 +44,26 @@ class Business_User_List {
 		return $objectList;
 	}
 
-	public static function GetStoreFieldData($list) {
-		$listCollection = array ();
-		foreach ( $list as $id ) {
-			$store = new Business_User_Store ( $id );
-			
-			$valueData = array ();
-			$valueData ['id'] = $store->GetId ();
-			$valueData ['storeName'] = $store->GetName ();
-			$valueData ['status'] = $store->GetStatus () == 1 ? true : false;
-			$valueData ['phoneNumber'] = $store->GetPhone ();
-			$valueData ['address'] = $store->GetAddress ();
-			$userName = '';
-			$password = '';
-			$realName = '';
-			if ($store->GetBoss () != null) {
-				$systemUser = $store->GetBoss ()->GetSystemUser ();
-				$userName = $systemUser->GetUserName ();
-				$password = $systemUser->GetPassword ();
-				$nickname = $store->GetBoss ()->GetNickname ();
-			}
-			$valueData ['userName'] = $userName;
-			$valueData ['passWord'] = $password;
-			$valueData ['realName'] = $realName;
-			
-			$listCollection [] = $valueData;
+	public static function SearchUserList($storeId, $nickname, $phone) {
+		$storeIdString = $storeId == "" ? "" : " AND F2_A201 = $storeId";
+		$nicknameString = $nickname == "" ? "" : " AND F4_A201 LIKE '%$nickname%'";
+		$phoneString = $phone == "" ? "" : " AND F6_A201 LIKE '%$phone%'";
+		
+		$sqlString = "SELECT ID FROM A_201 WHERE 1=1
+		$storeIdString
+		$nicknameString
+		$phoneString
+		ORDER BY OTIME DESC";
+		
+		$table = new Custom_Adapter ();
+		$db = $table->getAdapter ();
+		$data = $db->fetchAll ( $sqlString );
+		$objectList = array ();
+		
+		foreach ( $data as $value ) {
+			$objectList [] = $value ['ID'];
 		}
-		return $listCollection;
+		return $objectList;
 	}
 
 	public static function GetPlayerList() {
@@ -88,11 +81,11 @@ class Business_User_List {
 		}
 		return $objectList;
 	}
-	
-	public static function SearchPlayerList($nickname,$phone){
+
+	public static function SearchPlayerList($nickname, $phone) {
 		$nicknameString = $nickname == "" ? "" : " AND F4_A201 LIKE '%$nickname%'";
 		$phoneString = $phone == "" ? "" : " AND F6_A201 LIKE '%$phone%'";
-
+		
 		$sqlString = "SELECT ID FROM A_201 WHERE 1=1
 		AND F1_A201 = 3
 		$nicknameString
@@ -105,32 +98,9 @@ class Business_User_List {
 		$objectList = array ();
 		
 		foreach ( $data as $value ) {
-		$objectList [] = $value ['ID'];
+			$objectList [] = $value ['ID'];
 		}
 		return $objectList;
-	}
-
-	public static function GetPlayerFieldData($list) {
-		$listCollection = array ();
-		foreach ( $list as $id ) {
-			$player = new Business_User_Player_Base ( $id );
-			
-			$valueData = array ();
-			$valueData ['id'] = $player->GetId ();
-			$valueData ['nickname'] = $player->GetNickname ();
-			$valueData ['sex'] = $player->GetSex ();
-			$valueData ['phone'] = $player->GetPhone ();
-			$valueData ['killerIntegral'] = $player->GetKillerIntegral ();
-			$valueData ['detectiveIntegral'] = $player->GetDetectiveIntegral ();
-			$valueData ['peopleIntegral'] = $player->GetPeopleIntegral ();
-			$valueData ['totalIntegral'] = $player->GetTotalIntegral ();
-			$valueData ['activeIntegral'] = $player->GetActiveIntegral ();
-			$valueData ['remark'] = $player->GetRemark ();
-			$valueData ['otime'] = $player->GetOtime ();
-			
-			$listCollection [] = $valueData;
-		}
-		return $listCollection;
 	}
 
 	public function GetUserList() {
@@ -138,5 +108,57 @@ class Business_User_List {
 	}
 
 	public function GetUserFieldData($list) {
+	}
+
+	public static function GetRoleList() {
+		$objectList = array ();
+		$table = new Custom_Adapter ();
+		$db = $table->getAdapter ();
+		$table->setTable ( PROJECT . "_210" );
+		$where = $db->quoteInto ( ' 1 = 1 ', null );
+		$where .= $db->quoteInto ( ' AND ID > ?', 1 );
+		$order = "OTIME DESC";
+		$data = $table->fetchAll ( $where, $order );
+		
+		foreach ( $data as $value ) {
+			$objectList [] = $value ['ID'];
+		}
+		return $objectList;
+	}
+
+	public static function GetRankListByRole($roleId) {
+		// $roleIdString = $roleId == 0 ? "" : " AND F2_A211 = $roleId";
+		
+		// $sqlString = "
+		// SELECT ID FROM A_211 WHERE 1=1
+		// $roleIdString
+		// ORDER BY F3_A211,OTIME DESC
+		// ";
+		
+		// $table = new Custom_Adapter ();
+		// $db = $table->getAdapter ();
+		// $data = $db->fetchAll ( $sqlString );
+		// $objectList = array ();
+		
+		// foreach ( $data as $value ) {
+		// $objectList [] = $value ['ID'];
+		// }
+		// return $objectList;
+		$objectList = array ();
+		$table = new Custom_Adapter ();
+		$db = $table->getAdapter ();
+		$table->setTable ( PROJECT . "_211" );
+		$where = $db->quoteInto ( ' 1 = 1 ', null );
+		$where .= $db->quoteInto ( ' AND F2_A211 = ? ', $roleId );
+		$order = array (
+				"F1_A211",
+				"OTIME" 
+		);
+		$data = $table->fetchAll ( $where, $order );
+		
+		foreach ( $data as $value ) {
+			$objectList [] = $value ['ID'];
+		}
+		return $objectList;
 	}
 }

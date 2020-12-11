@@ -17,9 +17,9 @@ class Object_Script_Base extends Data_Object {
 	/**
 	 * 名称
 	 *
-	 * @var number
+	 * @var string
 	 */
-	private $title = 0;
+	private $title = '';
 
 	/**
 	 * 获取名称
@@ -35,7 +35,7 @@ class Object_Script_Base extends Data_Object {
 	 *
 	 * @param string $title        	
 	 */
-	public function SetTItle($title) {
+	public function SetTitle($title) {
 		if ($this->title != $title) {
 			$this->title = $title;
 			$this->isValueChanged = true;
@@ -85,7 +85,6 @@ class Object_Script_Base extends Data_Object {
 		}
 	}
 	
-	
 	/**
 	 * 类型
 	 *
@@ -113,10 +112,7 @@ class Object_Script_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
-	
 	private $amount = 0;
-	
 
 	/**
 	 * 获取数量
@@ -126,11 +122,11 @@ class Object_Script_Base extends Data_Object {
 	public function GetAmount() {
 		return $this->amount;
 	}
-	
+
 	/**
 	 * 设置数量
 	 *
-	 * @param number $amount
+	 * @param number $amount        	
 	 */
 	public function SetAmount($amount) {
 		if ($this->amount != $amount) {
@@ -138,7 +134,6 @@ class Object_Script_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
 	private $image = "";
 
 	/**
@@ -149,11 +144,11 @@ class Object_Script_Base extends Data_Object {
 	public function GetImage() {
 		return $this->image;
 	}
-	
+
 	/**
 	 * 设置图片地址
 	 *
-	 * @param string $image
+	 * @param string $image        	
 	 */
 	public function SetImage($image) {
 		if ($this->image != $image) {
@@ -161,14 +156,14 @@ class Object_Script_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-
+	
 	/**
 	 * 成本价
 	 *
 	 * @var decimal(10,2)
 	 */
 	private $costPrice = 0.00;
-	
+
 	/**
 	 * 获取成本价
 	 *
@@ -177,11 +172,11 @@ class Object_Script_Base extends Data_Object {
 	public function GetCostPrice() {
 		return sprintf ( "%.2f", $this->costPrice );
 	}
-	
+
 	/**
 	 * 设置成本价
 	 *
-	 * @param decimal(10,2) $costPrice
+	 * @param decimal(10,2) $costPrice        	
 	 */
 	public function SetCostPrice($costPrice) {
 		if ($this->costPrice != sprintf ( "%.2f", $costPrice )) {
@@ -190,6 +185,38 @@ class Object_Script_Base extends Data_Object {
 		}
 	}
 	
+	/**
+	 * 开本价
+	 *
+	 * @var decimal(10,2)
+	 */
+	private $formatPrice = 0.00;
+
+	/**
+	 * 获取开本价
+	 *
+	 * @return decimal(10,2)
+	 */
+	public function GetFormatPrice() {
+		return sprintf ( "%.2f", $this->formatPrice );
+	}
+
+	/**
+	 * 设置开本价
+	 *
+	 * @param decimal(10,2) $formatPrice        	
+	 */
+	public function SetFormatPrice($formatPrice) {
+		if ($this->formatPrice != sprintf ( "%.2f", $formatPrice )) {
+			$this->formatPrice = sprintf ( "%.2f", $formatPrice );
+			$this->isValueChanged = true;
+		}
+	}
+	
+	/**
+	 * 描述
+	 * @var string
+	 */
 	private $description = "";
 
 	/**
@@ -200,11 +227,11 @@ class Object_Script_Base extends Data_Object {
 	public function GetDescription() {
 		return $this->description;
 	}
-	
+
 	/**
 	 * 设置描述
 	 *
-	 * @param string $description
+	 * @param string $description        	
 	 */
 	public function SetDescription($description) {
 		if ($this->description != $description) {
@@ -212,8 +239,7 @@ class Object_Script_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
-	private $applicableNumber = ""; 
+	private $applicableNumber = "";
 
 	/**
 	 * 获取适用人数
@@ -223,11 +249,11 @@ class Object_Script_Base extends Data_Object {
 	public function GetApplicableNumber() {
 		return $this->applicableNumber;
 	}
-	
+
 	/**
 	 * 设置适用人数
 	 *
-	 * @param string $applicableNumber
+	 * @param string $applicableNumber        	
 	 */
 	public function SetApplicableNumber($applicableNumber) {
 		if ($this->applicableNumber != $applicableNumber) {
@@ -235,7 +261,6 @@ class Object_Script_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
 	private $gameTime = 0;
 
 	/**
@@ -246,11 +271,11 @@ class Object_Script_Base extends Data_Object {
 	public function GetGameTime() {
 		return $this->gameTime;
 	}
-	
+
 	/**
 	 * 设置推荐游戏时间
 	 *
-	 * @param string $gameTime
+	 * @param string $gameTime        	
 	 */
 	public function SetGameTime($gameTime) {
 		if ($this->gameTime != $gameTime) {
@@ -258,7 +283,6 @@ class Object_Script_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
 	private $isAdapt = 0;
 
 	/**
@@ -269,11 +293,11 @@ class Object_Script_Base extends Data_Object {
 	public function GetIsAdapt() {
 		return $this->isAdapt;
 	}
-	
+
 	/**
 	 * 设置是否改编
 	 *
-	 * @param number $isAdapt
+	 * @param number $isAdapt        	
 	 */
 	public function SetIsAdapt($isAdapt) {
 		if ($this->isAdapt != $isAdapt) {
@@ -281,7 +305,6 @@ class Object_Script_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
 	private $adaptContent = "";
 
 	/**
@@ -292,11 +315,11 @@ class Object_Script_Base extends Data_Object {
 	public function GetAdaptContent() {
 		return $this->adaptContent;
 	}
-	
+
 	/**
 	 * 设置改编内容
 	 *
-	 * @param string $adaptContent
+	 * @param string $adaptContent        	
 	 */
 	public function SetAdaptContent($adaptContent) {
 		if ($this->adaptContent != $adaptContent) {
@@ -304,8 +327,6 @@ class Object_Script_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
-	
 
 	/**
 	 * 构造函数
@@ -340,15 +361,16 @@ class Object_Script_Base extends Data_Object {
 			$this->SetId ( $data ['ID'] );
 			$this->SetTitle ( $data ['F1_A301'] );
 			$this->store = $data ['F2_A301'];
-			$this->SetType( $data ['F3_A301']);
+			$this->SetType ( $data ['F3_A301'] );
 			$this->SetAmount ( $data ['F4_A301'] );
 			$this->SetImage ( $data ['F5_A301'] );
 			$this->SetCostPrice ( $data ['F6_A301'] );
-			$this->SetDescription ( $data ['F7_A301'] );
-			$this->SetApplicableNumber ( $data ['F8_A301'] );
-			$this->SetGameTime ( $data ['F9_A301'] );
-			$this->SetIsAdapt($data['F10_A301']);
-			$this->SetAdaptContent($data['F11_A301']);
+			$this->SetFormatPrice ( $data ['F7_A301'] );
+			$this->SetDescription ( $data ['F8_A301'] );
+			$this->SetApplicableNumber ( $data ['F9_A301'] );
+			$this->SetGameTime ( $data ['F10_A301'] );
+			$this->SetIsAdapt ( $data ['F11_A301'] );
+			$this->SetAdaptContent ( $data ['F12_A301'] );
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -367,15 +389,16 @@ class Object_Script_Base extends Data_Object {
 		$data = array (
 				'F1_A301' => $this->GetTitle (),
 				'F2_A301' => $this->store,
-				'F3_A301' => $this->GetType(),
+				'F3_A301' => $this->GetType (),
 				'F4_A301' => $this->GetAmount (),
 				'F5_A301' => $this->GetImage (),
 				'F6_A301' => $this->GetCostPrice (),
-				'F7_A301' => $this->GetDescription (),
-				'F8_A301' => $this->GetApplicableNumber (),
-				'F9_A301' => $this->GetGameTime () ,
-				'F10_301' => $this->GetIsAdapt(),
-				'F11_301' => $this->GetAdaptContent()
+				'F7_A301' => $this->GetFormatPrice (),
+				'F8_A301' => $this->GetDescription (),
+				'F9_A301' => $this->GetApplicableNumber (),
+				'F10_A301' => $this->GetGameTime (),
+				'F11_A301' => $this->GetIsAdapt (),
+				'F12_A301' => $this->GetAdaptContent () 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

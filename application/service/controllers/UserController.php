@@ -40,7 +40,7 @@ class Service_UserController extends Zend_Controller_Action {
 		$storeList = Business_User_List::SearchStoreList ( $userName, $storeName, $status, $phone );
 		$paginate = new Paginate ( $storeList, $pageRecords, $currentPage );
 		
-		$listCollection = Business_User_List::GetStoreFieldData ( $paginate->CurrentRecord () );
+		$listCollection = Business_User_Tool::GetStoreListFieldData ( $paginate->CurrentRecord () );
 		
 		$message = array (
 				"code" => 10200,
@@ -124,6 +124,30 @@ class Service_UserController extends Zend_Controller_Action {
 		exit ();
 	}
 
+	public function getUserListAction() {
+		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
+		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		
+		$storeId = $this->params ['storeId'];
+		$nickname = $this->params ['nickname'];
+		$phone = $this->params ['phone'];
+		
+		$userList = Business_User_List::SearchUserList ( $storeId, $nickname, $phone );
+		$paginate = new Paginate ( $userList, $pageRecords, $currentPage );
+		
+		$listCollection = Business_User_Tool::GetUserListFieldData ( $paginate->CurrentRecord () );
+		
+		$message = array (
+				"code" => 10200,
+				"msg" => '成功',
+				"data" => $listCollection,
+				"time" => date ( 'Y-m-d H:i:s' ),
+				'pageCount' => $paginate->PageCount () 
+		);
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
 	/**
 	 * 获取玩家列表
 	 */
@@ -137,7 +161,7 @@ class Service_UserController extends Zend_Controller_Action {
 		$playerList = Business_User_List::SearchPlayerList ( $nickname, $phone );
 		$paginate = new Paginate ( $playerList, $pageRecords, $currentPage );
 		
-		$listCollection = Business_User_List::GetPlayerFieldData ( $paginate->CurrentRecord () );
+		$listCollection = Business_User_Tool::GetPlayerListFieldData ( $paginate->CurrentRecord () );
 		
 		$message = array (
 				"code" => 10200,
@@ -196,6 +220,132 @@ class Service_UserController extends Zend_Controller_Action {
 		if ($store->GetData ()) {
 			$message ['data'] = $store->GetData ();
 		}
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
+	/**
+	 * 获取剧本列表
+	 */
+	public function getScriptListAction() {
+		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
+		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		
+		$storeId = $this->params ['storeId'];
+		$title = $this->params ['title'];
+		$type = $this->params ['type'];
+		$applicableNumber = $this->params ['applicableNumber'];
+		$isAdapt = $this->params ['isAdapt'];
+		
+		$playerList = Business_Script_List::SearchScriptList ( $storeId, $title, $type, $applicableNumber, $isAdapt );
+		$paginate = new Paginate ( $playerList, $pageRecords, $currentPage );
+		
+		$listCollection = Business_Script_Tool::GetScriptListFieldData ( $paginate->CurrentRecord () );
+		
+		$message = array (
+				"code" => 10200,
+				"msg" => '成功',
+				"data" => $listCollection,
+				"time" => date ( 'Y-m-d H:i:s' ),
+				'pageCount' => $paginate->PageCount () 
+		);
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
+	public function addScriptAction() {
+		$title = $this->data ['title'];
+		$storeId = $this->data ['storeId'];
+		$type = $this->data ['type'];
+		$amount = isset ( $this->data ['amount'] ) ? $this->data ['amount'] : 1;
+		$costPrice = isset ( $this->data ['costPrice'] ) ? $this->data ['costPrice'] : 0;
+		$formatPrice = isset ( $this->data ['formatPrice'] ) ? $this->data ['formatPrice'] : 0;
+		$description = $this->data ['description'];
+		$applicableNumber = $this->data ['applicableNumber'];
+		$gameTime = $this->data ['gameTime'];
+		$isAdapt = $this->data ['isAdapt'];
+		$adaptContent = $this->data ['adaptContent'];
+		
+		$script = new Business_Webpage_Script ();
+		$script->AddScript ( $title, $storeId, $type, $amount, $costPrice, $formatPrice, $description, $applicableNumber, $gameTime, $isAdapt, $adaptContent );
+		
+		$message = array (
+				"code" => $script->GetCode (),
+				"msg" => $script->GetMessage (),
+				"time" => date ( 'Y-m-d H:i:s' ) 
+		);
+		if ($script->GetData ()) {
+			$message ['data'] = $script->GetData ();
+		}
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
+	public function editScriptAction() {
+		$scriptId = $this->data ['scriptId'];
+		$title = $this->data ['title'];
+		$type = $this->data ['type'];
+		$amount = isset ( $this->data ['amount'] ) ? $this->data ['amount'] : 1;
+		$costPrice = $this->data ['costPrice'];
+		$description = $this->data ['description'];
+		$applicableNumber = $this->data ['applicableNumber'];
+		$gameTime = $this->data ['gameTime'];
+		$isAdapt = $this->data ['isAdapt'];
+		$adaptContent = $this->data ['adaptContent'];
+		
+		$script = new Business_Webpage_Script ();
+		$script->EditScript ( $scriptId, $title, $type, $amount, $costPrice, $description, $applicableNumber, $gameTime, $isAdapt, $adaptContent );
+		
+		$message = array (
+				"code" => $script->GetCode (),
+				"msg" => $script->GetMessage (),
+				"time" => date ( 'Y-m-d H:i:s' ) 
+		);
+		if ($script->GetData ()) {
+			$message ['data'] = $script->GetData ();
+		}
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
+	public function getRoleListAction() {
+		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
+		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		
+		$roleList = Business_User_List::GetRoleList ();
+		$paginate = new Paginate ( $roleList, $pageRecords, $currentPage );
+		
+		$listCollection = Business_User_Tool::GetRoleListFieldData ( $paginate->CurrentRecord () );
+		
+		$message = array (
+				"code" => 10200,
+				"msg" => '成功',
+				"data" => $listCollection,
+				"time" => date ( 'Y-m-d H:i:s' ),
+				'pageCount' => $paginate->PageCount () 
+		);
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
+	public function getRankListByRoleAction() {
+		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
+		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		
+		$roleId = $this->params ['roleId'];
+		
+		$roleList = Business_User_List::GetRankListByRole ( $roleId );
+		$paginate = new Paginate ( $roleList, $pageRecords, $currentPage );
+		
+		$listCollection = Business_User_Tool::GetRankListFieldData ( $paginate->CurrentRecord () );
+		
+		$message = array (
+				"code" => 10200,
+				"msg" => '成功',
+				"data" => $listCollection,
+				"time" => date ( 'Y-m-d H:i:s' ),
+				'pageCount' => $paginate->PageCount () 
+		);
 		echo JsonData::ResultNotEncrypt ( $message );
 		exit ();
 	}
