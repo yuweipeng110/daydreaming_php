@@ -18,10 +18,11 @@ class Business_Script_OrderDetail extends Object_Script_OrderDetail {
 		return null;
 	}
 
-	public function ChangeOrderDetail($isPay, $discount) {
+	public function ChangeOrderDetail($isPay, $discount, $settlementPrice) {
 		if ($this->GetId () > 0) {
 			$this->SetIsPay ( $isPay );
 			$this->SetDiscount ( $discount );
+			$this->SetSettlementPrice ( $settlementPrice );
 			$this->Save ();
 			
 			return true;

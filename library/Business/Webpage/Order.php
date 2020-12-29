@@ -52,6 +52,33 @@ class Business_Webpage_Order extends Data_Explain {
 		return true;
 	}
 
+	public function EditOrder($orderId, $deskId, $hostId, $remark, $detailList) {
+		$result = false;
+		$resultCode = 0;
+		if (isset ( $orderId ) && isset ( $deskId ) && isset ( $hostId ) && isset ( $detailList )) {
+			$order = new Business_Script_Order ( $orderId );
+			$desk = new Business_Script_Desk ( $deskId );
+			$host = new Business_User_Base ( $hostId );
+			
+			$changeOrder = $order->ChangeOrder ( $desk, $host, $remark, $detailList );
+			
+			if ($changeOrder != null) {
+				
+				$resultCode = Business_Webpage_Message::SUCCESS;
+				$result = true;
+			} else {
+				$resultCode = Business_Webpage_Message::LOGIC_ERROR;
+			}
+		} else {
+			$resultCode = Business_Webpage_Message::PARAMETER_ERROR;
+		}
+		$resultMessage = Business_Webpage_Message::getMessage ( $resultCode );
+		
+		$this->SetCode ( $resultCode );
+		$this->SetMessage ( $resultMessage );
+		return $result;
+	}
+
 	public function RemoveOrderDetail(Business_Script_OrderDetail $orderDetail) {
 		if (! is_null ( $orderDetail )) {
 			$orderDetail->Destroy ();
@@ -64,7 +91,7 @@ class Business_Webpage_Order extends Data_Explain {
 	public function SetOrderSettlement($orderId, $remark, $settlementOperatorId, $orderDetailList) {
 		$result = false;
 		$resultCode = 0;
-		if (isset ( $orderId ) && isset ( $settlementOperatorId ) && isset ( $paymentMethod )) {
+		if (isset ( $orderId ) && isset ( $settlementOperatorId ) && isset ( $orderDetailList )) {
 			$order = new Business_Script_Order ( $orderId );
 			$settlementOperator = new Business_User_Base ( $settlementOperatorId );
 			

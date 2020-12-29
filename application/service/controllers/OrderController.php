@@ -13,9 +13,8 @@ class Service_OrderController extends Custom_Webpage {
 		$storeList = Business_Script_List::GetOrderList ();
 		$paginate = new Paginate ( $storeList, $pageRecords, $currentPage );
 		
-		$listCollection = Business_Script_Tool::GetOrderListFieldData( $paginate->CurrentRecord () );
+		$listCollection = Business_Script_Tool::GetOrderListFieldData ( $paginate->CurrentRecord () );
 		
-		print_r($listCollection);
 		$message = array (
 				"code" => 10200,
 				"msg" => '成功',
@@ -61,22 +60,36 @@ class Service_OrderController extends Custom_Webpage {
 		exit ();
 	}
 
+	public function editOrderAction() {
+		$orderId = $this->data ['orderId'];
+		$deskId = $this->data ['deskId'];
+		$hostId = $this->data ['hostId'];
+		$remark = $this->data ['remark'];
+		$detailList = $this->data ['detailList'];
+		
+		$order = new Business_Webpage_Order ();
+		$order->EditOrder ( $orderId, $deskId, $hostId, $remark, $detailList );
+		
+		$message = array (
+				"code" => $order->GetCode (),
+				"msg" => $order->GetMessage (),
+				"time" => date ( 'Y-m-d H:i:s' ) 
+		);
+		if ($order->GetData ()) {
+			$message ['data'] = $order->GetData ();
+		}
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
 	public function setOrderSettlementAction() {
 		$orderId = $this->data ['orderId'];
 		$remark = $this->data ['remark'];
 		$settlementOperatorId = $this->data ['settlementOperatorId'];
-		$detailIntegralList = $this->data ['detailIntegralList'];
-		
-		// $detailIntegralList = array (
-		// array (
-		// 'orderDetailId' => 1,
-		// 'roleId' => 2,
-		// 'integral' => 2
-		// )
-		// );
+		$orderDetailList = $this->data ['orderDetailList'];
 		
 		$order = new Business_Webpage_Order ();
-		$result = $order->SetOrderSettlement ( $orderId, $remark, $settlementOperatorId, $detailIntegralList );
+		$result = $order->SetOrderSettlement ( $orderId, $remark, $settlementOperatorId, $orderDetailList );
 		
 		$message = array (
 				"code" => $order->GetCode (),

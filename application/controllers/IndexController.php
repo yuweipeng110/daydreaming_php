@@ -1,6 +1,7 @@
 <?php
 
 class IndexController extends Zend_Controller_Action {
+	private $timeout = 600;
 
 	public function init() {
 		$this->_helper->viewRenderer->setNoRender ();
@@ -36,9 +37,87 @@ class IndexController extends Zend_Controller_Action {
 		
 		print_r ( $selfMenu );
 	}
+	
+	public function index1Action(){
+		$startDate = '2020-12-01';
+		$endDate = '2020-12-31';
+		print_r(Business_Statistics_Account::GetAccountDayStatisticsFromDate($startDate, $endDate));
+		
+		$user = new Business_User_Base ( 6 );
+		var_dump('balanceMoney:',$user->GetBalance());
+		var_dump('voucherMoney:',$user->GetVoucherBalance());
+		die('x');
+	}
 
 	public function indexAction() {
+// 		$user = new Business_User_Base ( 6 );
+// 		$changeMoney = 60 * -1;
+// 		$changeMode = new Business_Enum_Money('ORDER_OUT');
+// 		$changeType = 1;
+// 		$result = $user->AddMoney($changeMoney, $changeMode,$changeType);
+// 		var_dump($result);
+// 		die('x');
+		$user = new Business_User_Base ( 6 );
+		$changeMoney = 500;
+		$changeType = 1;
+		$changeMode = new Business_Enum_Money ( 'MANUAL_IN' );
+		$result = $user->AddMoney ( $changeMoney, $changeMode,$changeType );
+		var_dump ( $result );
+		die ( 'xx' );
+// 		$user = new Business_User_Base ( 7 );
+// 		$changeMoney = 1000;
+// 		$changeMode = new Business_Enum_Money ( 'MANUAL_IN' );
+// 		$user->AddMoney ( $changeMoney, $changeMode );
+// 		die ( 'xx' );
+		$now = sprintf ( "%.0f", Func::GetMillisecond () / 1000 );
+		$timestamp = ( int ) time ();
+		$timeResult = $now - $timestamp;
+		var_dump ( $now );
+		var_dump ( $timestamp );
+		var_dump ( $timeResult );
+		var_dump ( - 1 * $this->timeout );
+		var_dump ( 1 * $this->timeout );
+		if ($timeResult > - 1 * $this->timeout && $timeResult < 1 * $this->timeout) {
+			var_dump ( 'SUCCESS' );
+		}
+		die ( 'x' );
+		$user = new Business_User_Base ( 6 );
+		var_dump ( "杀手排名：" . $user->GetKillerRanking () );
+		var_dump ( "杀手积分：" . $user->GetKillerIntegral () );
+		var_dump ( "杀手称号：" . $user->GetKillerTitle () );
+		// die('x');
+		var_dump ( "侦探排名：" . $user->GetDetectiveRanking () );
+		var_dump ( "侦探积分：" . $user->GetDetectiveIntegral () );
+		var_dump ( "侦探称号：" . $user->GetDetectiveTitle () );
+		var_dump ( "总排名：" . $user->GetTotalRanking () );
+		var_dump ( "总积分：" . $user->GetTotalIntegral () );
+		var_dump ( "总称号：" . $user->GetTotalTitle () );
+		// print_r ( $userIntegralRankList );
+		die ( 'x' );
 		
+		// $userObject = Object_User_Indexing::GetUserObejctFromAdminUserId ( 31 );
+		// var_dump($userObject->GetId());
+		// die('xx');
+		
+		var_dump ( Format::FormatStreamDecrypt ( '9p1s6/K0ChhdBaMsHMUunw==' ) );
+		var_dump ( Format::FormatStreamDecrypt ( 'FgxxXYtjp1UirnNCok35OA==' ) );
+		$userName = 'xiaoyu';
+		$password = '123';
+		
+		$signin = new Business_Webpage_Signin ();
+		$result = $signin->LoginCheck ( $userName, $password );
+		
+		$message = array (
+				"code" => $signin->GetCode (),
+				"msg" => $signin->GetMessage (),
+				"time" => date ( 'Y-m-d H:i:s' ) 
+		);
+		if ($signin->GetData ()) {
+			$message ['data'] = $signin->GetData ();
+		}
+		var_dump ( $result );
+		var_dump ( $message );
+		die ( 'x' );
 		// $storeId = 1;
 		// $scriptId = 2;
 		// $deskId = 2;
@@ -92,7 +171,7 @@ class IndexController extends Zend_Controller_Action {
 										'integral' => 1 
 								) 
 						) 
-				) ,
+				),
 				array (
 						'orderDetailId' => 2,
 						'orderDetailIntegralList' => array (
@@ -105,11 +184,11 @@ class IndexController extends Zend_Controller_Action {
 										'integral' => 1 
 								) 
 						) 
-				) ,
+				) 
 		);
 		
 		$order = new Business_Webpage_Order ();
-		$result = $order->SetOrderSettlement ( $orderId, $settlementOperatorId, $paymentMethod,$detailList, $detailIntegralList );
+		$result = $order->SetOrderSettlement ( $orderId, $settlementOperatorId, $paymentMethod, $detailList, $detailIntegralList );
 		
 		$message = array (
 				"code" => $order->GetCode (),
@@ -123,19 +202,6 @@ class IndexController extends Zend_Controller_Action {
 		print_r ( $message );
 		die ( 'x' );
 		
-		$user = new Business_User_Base ( 1 );
-		var_dump ( "杀手排名：" . $user->GetKillerRanking () );
-		var_dump ( "杀手积分：" . $user->GetKillerIntegral () );
-		var_dump ( "杀手称号：" . $user->GetKillerTitle () );
-		// die('x');
-		var_dump ( "侦探排名：" . $user->GetDetectiveRanking () );
-		var_dump ( "侦探积分：" . $user->GetDetectiveIntegral () );
-		var_dump ( "侦探称号：" . $user->GetDetectiveTitle () );
-		var_dump ( "总排名：" . $user->GetTotalRanking () );
-		var_dump ( "总积分：" . $user->GetTotalIntegral () );
-		var_dump ( "总称号：" . $user->GetTotalTitle () );
-		// print_r ( $userIntegralRankList );
-		die ( 'x' );
 		die ();
 	}
 	private $m = 1;

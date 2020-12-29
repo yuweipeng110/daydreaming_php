@@ -168,6 +168,100 @@ class Object_Account_Money extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
+	
+	/**
+	 * 变动类型
+	 *
+	 * @var number
+	 */
+	private $changeType = 0;
+
+	/**
+	 * 获取变动类型
+	 *
+	 * @return number
+	 */
+	public function GetChangeType() {
+		return $this->changeType;
+	}
+
+	/**
+	 * 设置变动类型
+	 *
+	 * @param number $changeType        	
+	 */
+	public function SetChangeType($changeType) {
+		if ($this->changeType != $changeType) {
+			$this->changeType = $changeType;
+			$this->isValueChanged = true;
+		}
+	}
+	
+	/**
+	 * 活动对象
+	 *
+	 * @var Object_Promotions_Base
+	 */
+	private $promotions = null;
+
+	/**
+	 * 获取活动对象
+	 *
+	 * @return Object_Promotions_Base
+	 */
+	public function GetPromotions() {
+		$promotions = new Object_Promotions_Base ( $this->promotions );
+		if ($promotions->GetId () > 0) {
+			return $promotions;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 设置活动对象
+	 *
+	 * @param Object_Promotions_Base $promotions        	
+	 */
+	public function SetPromotions(Object_Promotions_Base $promotions) {
+		if ($this->promotions != $promotions->GetId ()) {
+			$this->promotions = $promotions->GetId ();
+			$this->isValueChanged = true;
+		}
+	}
+	
+	/**
+	 * 订单对象
+	 *
+	 * @var Object_Script_Order
+	 */
+	private $order = null;
+
+	/**
+	 * 获取订单对象
+	 *
+	 * @return Object_Script_Order
+	 */
+	public function GetOrder() {
+		$order = new Object_Script_Order ( $this->order );
+		if ($order->GetId () > 0) {
+			return $order;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 设置订单对象
+	 *
+	 * @param Object_Script_Order $order        	
+	 */
+	public function SetOrder(Object_Script_Order $order) {
+		if ($this->order != $order->GetId ()) {
+			$this->order = $order->GetId ();
+			$this->isValueChanged = true;
+		}
+	}
 
 	/**
 	 * 构造函数
@@ -205,6 +299,9 @@ class Object_Account_Money extends Data_Object {
 			$this->SetChangeTime ( $data ['F3_A801'] );
 			$this->SetRemarkIncrease ( $data ['F4_A801'] );
 			$this->SetRemarkReduce ( $data ['F5_A801'] );
+			$this->SetChangeType ( $data ['F6_A801'] );
+			$this->promotions = $data ['F7_A801'];
+			$this->order = $data ['F8_A801'];
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -225,7 +322,10 @@ class Object_Account_Money extends Data_Object {
 				'F2_A801' => $this->GetChangeMoney (),
 				'F3_A801' => $this->GetChangeTime (),
 				'F4_A801' => $this->GetRemarkIncrease (),
-				'F5_A801' => $this->GetRemarkReduce () 
+				'F5_A801' => $this->GetRemarkReduce (),
+				'F6_A801' => $this->GetChangeType (),
+				'F7_A801' => $this->promotions,
+				'F8_A801' => $this->order 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

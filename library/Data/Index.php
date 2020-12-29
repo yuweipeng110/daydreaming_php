@@ -203,7 +203,7 @@ class Data_Index implements Interface_IIndex {
 	 *
 	 * @var string
 	 */
-	private $Id = null;
+	private $Id = 0;
 	
 	/**
 	 * 获取对象索引(non-PHPdoc)
@@ -263,7 +263,7 @@ class Data_Index implements Interface_IIndex {
 		$this->db = $this->table->getAdapter ();
 		$data = $this->GetInstance ( false );
 		if ($data != null) {
-			$this->SetId ( $data ['Id'] );
+			$this->SetId ( $data ['ID'] );
 		} else {
 			$this->SetId ( 0 );
 		}

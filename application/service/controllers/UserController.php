@@ -161,7 +161,7 @@ class Service_UserController extends Zend_Controller_Action {
 		$playerList = Business_User_List::SearchPlayerList ( $nickname, $phone );
 		$paginate = new Paginate ( $playerList, $pageRecords, $currentPage );
 		
-		$listCollection = Business_User_Tool::GetPlayerListFieldData ( $paginate->CurrentRecord () );
+		$listCollection = Business_User_Tool::GetUserListFieldData ( $paginate->CurrentRecord () );
 		
 		$message = array (
 				"code" => 10200,
@@ -209,16 +209,38 @@ class Service_UserController extends Zend_Controller_Action {
 		$phone = $this->data ['phone'];
 		$remark = $this->data ['remark'];
 		
-		$store = new Business_Webpage_User ();
-		$result = $store->EditPlayer ( $playerId, $nickname, $sex, $phone, $remark );
+		$user = new Business_Webpage_User ();
+		$result = $user->EditPlayer ( $playerId, $nickname, $sex, $phone, $remark );
 		
 		$message = array (
-				"code" => $store->GetCode (),
-				"msg" => $store->GetMessage (),
+				"code" => $user->GetCode (),
+				"msg" => $user->GetMessage (),
 				"time" => date ( 'Y-m-d H:i:s' ) 
 		);
-		if ($store->GetData ()) {
-			$message ['data'] = $store->GetData ();
+		if ($user->GetData ()) {
+			$message ['data'] = $user->GetData ();
+		}
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
+	/**
+	 * 账户充值
+	 */
+	public function accountRechargeAction() {
+		$userId = $this->data ['userId'];
+		$rechargeAmount = $this->data ['rechargeAmount'];
+		
+		$user = new Business_Webpage_User ();
+		$result = $user->AccountRecharge ( $userId, $rechargeAmount );
+		
+		$message = array (
+				"code" => $user->GetCode (),
+				"msg" => $user->GetMessage (),
+				"time" => date ( 'Y-m-d H:i:s' ) 
+		);
+		if ($user->GetData ()) {
+			$message ['data'] = $user->GetData ();
 		}
 		echo JsonData::ResultNotEncrypt ( $message );
 		exit ();

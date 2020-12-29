@@ -178,29 +178,32 @@ class System_Admin_User extends Data_Object {
 	}
 	
 	/**
-	 * 微信TOKEN
+	 * TOKEN
 	 *
 	 * @var string
 	 */
-	private $weChatToken = "";
+	private $token = "";
 
 	/**
-	 * 获取微信TOKEN
+	 * 获取TOKEN
 	 *
 	 * @return string
 	 */
-	public function GetWeChatToken() {
-		return $this->weChatToken;
+	public function GetToken() {
+		return strtoupper ( ($this->token) );
 	}
 
 	/**
-	 * 设置微信TOKEN
+	 * 设置TOKEN
 	 *
 	 * @param string $weChatToken        	
 	 */
-	public function SetWeChatToken($weChatToken) {
-		if ($this->weChatToken != $weChatToken) {
-			$this->weChatToken = $weChatToken;
+	public function SetToken($token) {
+		if ($this->token != strtoupper ( $token )) {
+			$index = new Data_Index ( PROJECT . "_101", "F5_A101", $this->GetToken () );
+			is_null ( $index ) ?  : $index->Destroy ();
+			$this->token = strtoupper ( $token );
+			$this->isValueChanged = true;
 		}
 	}
 	
@@ -289,7 +292,7 @@ class System_Admin_User extends Data_Object {
 			$this->password = $data ['F2_A101'];
 			$this->SetReadOnly ( $data ['F3_A101'] == 1 );
 			$this->realName = $data ['F4_A101'];
-			$this->weChatToken = $data ['F5_A101'];
+			$this->SetToken( $data ['F5_A101'] );
 			$this->team = $data ['F6_A101'];
 // 			$this->branch = $data ['F7_A101'];
 			$this->SetSort ( $data ['F8_A101'] );
@@ -311,7 +314,7 @@ class System_Admin_User extends Data_Object {
 				'F2_A101' => $this->password,
 				'F3_A101' => $this->GetReadOnly () ? "1" : "0",
 				'F4_A101' => $this->realName,
-				'F5_A101' => $this->weChatToken,
+				'F5_A101' => $this->GetToken(),
 				'F6_A101' => $this->team,
 // 				'F7_A101' => $this->branch,
 				'F8_A101' => $this->GetSort (),
@@ -336,6 +339,8 @@ class System_Admin_User extends Data_Object {
 	 * @see Data_Object::Destroy()
 	 */
 	public function Destroy() {
+		$index = new Data_Index ( PROJECT . "_101", "F5_A101", $this->GetToken () );
+		is_null ( $index ) ?  : $index->Destroy ();
 		$this->table->setTable ( $this->getTableName () );
 		$where = $this->db->quoteInto ( ' ID= ? ', $this->GetId () );
 		$this->table->delete ( $where );

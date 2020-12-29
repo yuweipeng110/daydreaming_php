@@ -25,8 +25,13 @@ class Business_Enum_Money {
 
 	public static function getDescriptionList() {
 		$list = array (
-				'MANUAL_IN' => '手动添加',
-				'MANUAL_OUT' => "手动减少"
+				'MANUAL_IN' => '手动充值',
+				'MANUAL_OUT' => '手动支付',
+				'WECHAT_QRCODE_IN' => '微信二维码充值',
+				'WECHAT_QRCODE_OUT' => '微信二维码支付',
+				'PROMOTIONS_IN' => '活动抵用卷赠送',
+				'PROMOTIONS_OUT' => '活动抵用卷支付',
+				'ORDER_OUT' => '订单支付',
 		);
 		return $list;
 	}

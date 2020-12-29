@@ -2,6 +2,22 @@
 
 class Business_User_Tool {
 
+	public static function GetSystemUserFieldData($id) {
+		if ($id <= 0) {
+			return array ();
+		}
+		$instance = new System_Admin_User ( $id );
+		
+		$valueData = array ();
+		$valueData ['id'] = $instance->GetId ();
+		$valueData ['userName'] = $instance->GetUserName ();
+		$valueData ['password'] = $instance->GetPassword ();
+		$valueData ['realName'] = $instance->GetRealName ();
+		$valueData ['otime'] = $instance->GetOtime ();
+		
+		return $valueData;
+	}
+
 	public static function GetUserFieldData($id) {
 		if ($id <= 0) {
 			return array ();
@@ -15,11 +31,23 @@ class Business_User_Tool {
 		$valueData ['nickname'] = $instance->GetNickname ();
 		$valueData ['sex'] = $instance->GetSex ();
 		$valueData ['phone'] = $instance->GetPhone ();
+		$valueData ['killerRanking'] = $instance->GetKillerRanking ();
 		$valueData ['killerIntegral'] = $instance->GetKillerIntegral ();
+		$valueData ['killerTitle'] = $instance->GetKillerTitle ();
+		$valueData ['detectiveRanking'] = $instance->GetDetectiveRanking ();
 		$valueData ['detectiveIntegral'] = $instance->GetDetectiveIntegral ();
+		$valueData ['detectiveTitle'] = $instance->GetDetectiveTitle ();
+		$valueData ['peopleRanking'] = $instance->GetPeopleRanking ();
 		$valueData ['peopleIntegral'] = $instance->GetPeopleIntegral ();
+		$valueData ['peopleTitle'] = $instance->GetPeopleTitle ();
+		$valueData ['totalRanking'] = $instance->GetTotalRanking ();
+		$valueData ['totalIntegral'] = $instance->GetTotalIntegral ();
+		$valueData ['totalTitle'] = $instance->GetTotalTitle ();
+		$valueData ['activeIntegral'] = $instance->GetActiveIntegral ();
 		$valueData ['remark'] = $instance->GetRemark ();
 		$valueData ['otime'] = $instance->GetOtime ();
+		$valueData ['accountBalance'] = $instance->GetBalance ();
+		$valueData ['voucherBalance'] = $instance->GetVoucherBalance ();
 		
 		return $valueData;
 	}
@@ -28,36 +56,6 @@ class Business_User_Tool {
 		$listCollection = array ();
 		foreach ( $list as $id ) {
 			$listCollection [] = self::GetUserFieldData ( $id );
-		}
-		return $listCollection;
-	}
-
-	public static function GetPlayerFieldData($id) {
-		if ($id <= 0) {
-			return array ();
-		}
-		$instance = new Business_User_Player_Base ( $id );
-		
-		$valueData = array ();
-		$valueData ['id'] = $instance->GetId ();
-		$valueData ['nickname'] = $instance->GetNickname ();
-		$valueData ['sex'] = $instance->GetSex ();
-		$valueData ['phone'] = $instance->GetPhone ();
-		$valueData ['killerIntegral'] = $instance->GetKillerIntegral ();
-		$valueData ['detectiveIntegral'] = $instance->GetDetectiveIntegral ();
-		$valueData ['peopleIntegral'] = $instance->GetPeopleIntegral ();
-		$valueData ['totalIntegral'] = $instance->GetTotalIntegral ();
-		$valueData ['activeIntegral'] = $instance->GetActiveIntegral ();
-		$valueData ['remark'] = $instance->GetRemark ();
-		$valueData ['otime'] = $instance->GetOtime ();
-		
-		return $valueData;
-	}
-
-	public static function GetPlayerListFieldData($list) {
-		$listCollection = array ();
-		foreach ( $list as $id ) {
-			$listCollection [] = self::GetPlayerFieldData ( $id );
 		}
 		return $listCollection;
 	}
@@ -74,18 +72,10 @@ class Business_User_Tool {
 		$valueData ['status'] = $instance->GetStatus () == 1 ? true : false;
 		$valueData ['phoneNumber'] = $instance->GetPhone ();
 		$valueData ['address'] = $instance->GetAddress ();
-		$userName = '';
-		$password = '';
-		$realName = '';
 		if ($instance->GetBoss () != null) {
-			$systemUser = $instance->GetBoss ()->GetSystemUser ();
-			$userName = $systemUser->GetUserName ();
-			$password = $systemUser->GetPassword ();
-			$nickname = $instance->GetBoss ()->GetNickname ();
+			$valueData ['bossId'] = $instance->GetBoss ()->GetId ();
+			$valueData ['bossInfo'] = self::GetSystemUserFieldData ( $instance->GetBoss ()->GetSystemUser ()->GetId () );
 		}
-		$valueData ['userName'] = $userName;
-		$valueData ['passWord'] = $password;
-		$valueData ['realName'] = $realName;
 		
 		return $valueData;
 	}
@@ -107,7 +97,7 @@ class Business_User_Tool {
 		$valueData = array ();
 		$valueData ['id'] = $instance->GetId ();
 		$valueData ['title'] = $instance->GetTitle ();
-		$valueData ['maxAddIntegral'] = (int) $instance->GetMaxAddIntegral ();
+		$valueData ['maxAddIntegral'] = ( int ) $instance->GetMaxAddIntegral ();
 		$valueData ['otime'] = $instance->GetOtime ();
 		
 		return $valueData;

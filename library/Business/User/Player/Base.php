@@ -22,25 +22,6 @@ class Business_User_Player_Base extends Business_User_Base {
 			
 			return $this;
 		}
-		// PARAMETER_ERROR
 		return null;
-	}
-
-	/**
-	 * 总积分
-	 *
-	 * @return number
-	 */
-	public function GetTotalIntegral() {
-		return 0;
-	}
-
-	/**
-	 * 可用积分
-	 *
-	 * @return number
-	 */
-	public function GetActiveIntegral() {
-		return 0;
 	}
 }

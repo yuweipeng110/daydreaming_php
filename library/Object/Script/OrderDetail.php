@@ -183,6 +183,36 @@ class Object_Script_OrderDetail extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
+	
+
+
+	/**
+	 * 结算价格
+	 *
+	 * @var DECIMAL(10,2)
+	 */
+	private $settlementPrice = 0.00;
+	
+	/**
+	 * 获取结算价格
+	 *
+	 * @return DECIMAL(10,2)
+	 */
+	public function GetSettlementPrice() {
+		return $this->settlementPrice;
+	}
+	
+	/**
+	 * 设置结算价格
+	 *
+	 * @param DECIMAL(10,2) $settlementPrice
+	 */
+	public function SetSettlementPrice($settlementPrice) {
+		if ($this->settlementPrice != sprintf ( "%.2f", $settlementPrice )) {
+			$this->settlementPrice = sprintf ( "%.2f", $settlementPrice );
+			$this->isValueChanged = true;
+		}
+	}
 
 	/**
 	 * 构造函数
@@ -220,6 +250,7 @@ class Object_Script_OrderDetail extends Data_Object {
 			$this->SetUnitPrice ( $data ['F3_A303'] );
 			$this->SetIsPay ( $data ['F4_A303'] );
 			$this->SetDiscount ( $data ['F5_A303'] );
+			$this->SetSettlementPrice($data['F6_A303']);
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -240,7 +271,8 @@ class Object_Script_OrderDetail extends Data_Object {
 				'F2_A303' => $this->user,
 				'F3_A303' => $this->GetUnitPrice (),
 				'F4_A303' => $this->GetIsPay (),
-				'F5_A303' => $this->GetDiscount () 
+				'F5_A303' => $this->GetDiscount () ,
+				'F6_A303' => $this->GetSettlementPrice()
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

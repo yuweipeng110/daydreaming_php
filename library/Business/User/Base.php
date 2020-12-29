@@ -137,7 +137,7 @@ class Business_User_Base extends Object_User_Base {
 	}
 
 	public function GetIntegral() {
-		if ($this->GetId () <= 0) {
+		if ($this->GetId () == 0) {
 			return false;
 		}
 		$table = new Custom_Adapter ();
@@ -185,12 +185,12 @@ class Business_User_Base extends Object_User_Base {
 	}
 
 	public function GetBalance() {
-		if ($this->GetId () <= 0) {
+		if ($this->GetId () == 0) {
 			return false;
 		}
 		$table = new Custom_Adapter ();
 		$db = $table->getAdapter ();
-		$sql = "SELECT SUM(F2_A801) AS MONEY FROM A_801 WHERE F1_A801 = " . $this->GetId ();
+		$sql = "SELECT SUM(F2_A801) AS MONEY FROM A_801 WHERE F1_A801 = " . $this->GetId () . " AND F6_A801 = 1";
 		
 		$result = $db->query ( $sql );
 		$data = $result->fetchAll ();
@@ -202,11 +202,32 @@ class Business_User_Base extends Object_User_Base {
 		return sprintf ( "%.2f", $money );
 	}
 
-	public function AddMoney($changeMoney, Business_Enum_Money $changeMode) {
+	public function GetVoucherBalance() {
+		if ($this->GetId () == 0) {
+			return false;
+		}
+		$table = new Custom_Adapter ();
+		$db = $table->getAdapter ();
+		$sql = "SELECT SUM(F2_A801) AS MONEY FROM A_801 WHERE F1_A801 = " . $this->GetId () . " AND F6_A801 = 2";
+		
+		$result = $db->query ( $sql );
+		$data = $result->fetchAll ();
+		
+		$money = 0;
+		if (count ( $data ) > 0) {
+			$money = $data [0] ['MONEY'] == null ? 0 : $data [0] ['MONEY'];
+		}
+		return sprintf ( "%.2f", $money );
+	}
+
+	public function AddMoney($changeMoney, Business_Enum_Money $changeMode, $changeType, Business_Promotions_Base $promotions = null, Business_Script_Order $order = null) {
+		if ($this->GetId () == 0) {
+			return false;
+		}
 		$remarkIncrease = "";
 		$remarkReduce = "";
 		
-		if (array_key_exists ( $changeMode->getValue (), Business_Enum_Integral::getDescriptionList () )) {
+		if (array_key_exists ( $changeMode->getValue (), Business_Enum_Money::getDescriptionList () )) {
 			$remarkIncrease = $changeMode->getValue ();
 			$remarkReduce = $changeMode->getValue ();
 		}
@@ -216,12 +237,37 @@ class Business_User_Base extends Object_User_Base {
 		} else {
 			$remarkReduce = "";
 		}
-		if ($this->GetBalance () + $changeMoney < 0) {
+		if ($this->GetBalance () + $this->GetVoucherBalance () + $changeMoney < 0) {
 			return false;
 		}
+		$moneyInstance = null;
 		
-		$money = new Business_Account_Money ();
-		$moneyInstance = $money->CreateMoney ( $this, $changeMoney, $remarkIncrease, $remarkReduce );
+		// balance pay
+		$voucherMoney = 0;
+		if ($changeMoney < 0 && $this->GetBalance () + $changeMoney < 0) {
+			$voucherMoney = $this->GetBalance () + $changeMoney;
+			$balanceChangeMoney = $this->GetBalance () * - 1;
+			$changeMoney = $balanceChangeMoney;
+		}
+		
+		if($changeMoney != 0){
+			$account = new Business_Account_Money ();
+			$moneyInstance = $account->CreateMoney ( $this, $changeMoney, $remarkIncrease, $remarkReduce, $changeType, $promotions, $order );
+		}
+		
+		// voucher pay
+		if ($voucherMoney != 0 && $voucherMoney < 0) {
+			$account = new Business_Account_Money ();
+			$remarkIncrease = "";
+			$remarkReduce = $changeMode->getValue ();
+			$changeType = 2;
+			
+			$account->CreateMoney ( $this, $voucherMoney, $remarkIncrease, $remarkReduce, $changeType, $promotions, $order );
+		}
+		
+		if ($changeMoney > 0) {
+			$account->DetectPromotionsVoucherProcess ( $this, $changeMoney );
+		}
 		
 		return $moneyInstance == null ? false : true;
 	}
@@ -258,14 +304,14 @@ class Business_User_Base extends Object_User_Base {
 		
 		foreach ( $rankList as $rankId ) {
 			$rank = new Business_User_Rank ( $rankId );
-			if ($this->GetKillerRanking () <= 3 && $this->GetKillerRanking () == $rank->GetFullRanking ()) {
-				$title = $rank->GetTitle ();
-				break;
-			}
-			
 			if ($rank->GetFullRanking () == 0 && $this->GetKillerIntegral () >= $rank->GetIntegral ()) {
 				$title = $rank->GetTitle ();
 			} else {
+				break;
+			}
+			
+			if ($this->GetKillerRanking () <= 3 && $this->GetKillerRanking () == $rank->GetFullRanking ()) {
+				$title = $rank->GetTitle ();
 				break;
 			}
 		}
@@ -305,14 +351,14 @@ class Business_User_Base extends Object_User_Base {
 		
 		foreach ( $rankList as $rankId ) {
 			$rank = new Business_User_Rank ( $rankId );
-			if ($this->GetKillerRanking () <= 3 && $this->GetKillerRanking () == $rank->GetFullRanking ()) {
+			if ($rank->GetFullRanking () == 0 && $this->GetDetectiveIntegral () >= $rank->GetIntegral ()) {
 				$title = $rank->GetTitle ();
+			} else {
 				break;
 			}
 			
-			if ($rank->GetFullRanking () == 0 && $this->GetKillerIntegral () >= $rank->GetIntegral ()) {
+			if ($this->GetDetectiveRanking () <= 3 && $this->GetDetectiveRanking () == $rank->GetFullRanking ()) {
 				$title = $rank->GetTitle ();
-			} else {
 				break;
 			}
 		}
@@ -352,14 +398,14 @@ class Business_User_Base extends Object_User_Base {
 		
 		foreach ( $rankList as $rankId ) {
 			$rank = new Business_User_Rank ( $rankId );
-			if ($this->GetKillerRanking () <= 3 && $this->GetKillerRanking () == $rank->GetFullRanking ()) {
+			if ($rank->GetFullRanking () == 0 && $this->GetPeopleIntegral () >= $rank->GetIntegral ()) {
 				$title = $rank->GetTitle ();
+			} else {
 				break;
 			}
 			
-			if ($rank->GetFullRanking () == 0 && $this->GetKillerIntegral () >= $rank->GetIntegral ()) {
+			if ($this->GetPeopleRanking () <= 3 && $this->GetPeopleRanking () == $rank->GetFullRanking ()) {
 				$title = $rank->GetTitle ();
-			} else {
 				break;
 			}
 		}
@@ -399,18 +445,27 @@ class Business_User_Base extends Object_User_Base {
 		
 		foreach ( $rankList as $rankId ) {
 			$rank = new Business_User_Rank ( $rankId );
-			if ($this->GetKillerRanking () <= 3 && $this->GetKillerRanking () == $rank->GetFullRanking ()) {
+			if ($rank->GetFullRanking () == 0 && $this->GetTotalIntegral () >= $rank->GetIntegral ()) {
 				$title = $rank->GetTitle ();
+			} else {
 				break;
 			}
 			
-			if ($rank->GetFullRanking () == 0 && $this->GetKillerIntegral () >= $rank->GetIntegral ()) {
+			if ($this->GetTotalRanking () <= 3 && $this->GetTotalRanking () == $rank->GetFullRanking ()) {
 				$title = $rank->GetTitle ();
-			} else {
 				break;
 			}
 		}
 		
 		return $title;
+	}
+
+	/**
+	 * 可用积分
+	 *
+	 * @return number
+	 */
+	public function GetActiveIntegral() {
+		return 0;
 	}
 }
