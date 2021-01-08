@@ -10,7 +10,12 @@ class Service_OrderController extends Custom_Webpage {
 		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
 		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
 		
-		$storeList = Business_Script_List::GetOrderList ();
+		$storeId = $this->params ['storeId'];
+		$statusId = $this->params ['statusId'];
+		$startDate = $this->params ['startDate'];
+		$endDate = $this->params ['endDate'];
+		
+		$storeList = Business_Script_List::SearchOrderList ( $storeId, $statusId, $startDate, $endDate );
 		$paginate = new Paginate ( $storeList, $pageRecords, $currentPage );
 		
 		$listCollection = Business_Script_Tool::GetOrderListFieldData ( $paginate->CurrentRecord () );

@@ -25,12 +25,13 @@ class Business_Script_List {
 		$isAdaptString = $isAdapt == "" ? "" : " AND F10_A301=$isAdapt";
 		
 		$sqlString = "SELECT ID FROM A_301 WHERE 1=1
-		$storeString
-		$titleString
-		$typeString
-		$applicableNumberString
-		$isAdaptString
-		ORDER BY OTIME DESC";
+			$storeString
+			$titleString
+			$typeString
+			$applicableNumberString
+			$isAdaptString
+			ORDER BY OTIME DESC
+		";
 		
 		$table = new Custom_Adapter ();
 		$db = $table->getAdapter ();
@@ -41,31 +42,6 @@ class Business_Script_List {
 			$objectList [] = $value ['ID'];
 		}
 		return $objectList;
-	}
-
-	public static function GetScriptFieldData($list) {
-		$listCollection = array ();
-		foreach ( $list as $id ) {
-			$instance = new Business_Script_Base ( $id );
-			
-			$valueData = array ();
-			$valueData ['id'] = $instance->GetId ();
-			$valueData ['title'] = $instance->GetTitle ();
-			$valueData ['storeId'] = $instance->GetStore ()->GetId ();
-			$valueData ['type'] = $instance->GetType ();
-			$valueData ['amount'] = $instance->GetAmount ();
-			$valueData ['image'] = $instance->GetImage ();
-			$valueData ['costPrice'] = $instance->GetCostPrice ();
-			$valueData ['description'] = $instance->GetDescription ();
-			$valueData ['applicableNumber'] = $instance->GetApplicableNumber ();
-			$valueData ['gameTime'] = $instance->GetGameTime ();
-			$valueData ['isAdapt'] = $instance->GetIsAdapt ();
-			$valueData ['adaptContent'] = $instance->GetAdaptContent ();
-			$valueData ['otime'] = $instance->GetOtime ();
-			
-			$listCollection [] = $valueData;
-		}
-		return $listCollection;
 	}
 
 	public static function GetOrderList() {
@@ -83,41 +59,29 @@ class Business_Script_List {
 		return $objectList;
 	}
 
-	public static function GetOrderFieldData($list) {
-		$listCollection = array ();
-		foreach ( $list as $id ) {
-			$instance = new Business_Script_Order ( $id );
-			
-			$valueData = array ();
-			$valueData ['id'] = $instance->GetId ();
-			$valueData ['orderNo'] = $instance->GetOrderNo ();
-			$valueData ['scriptId'] = $instance->GetScript ()->GetId ();
-			$valueData ['scriptTitle'] = $instance->GetScript ()->GetTitle ();
-			$valueData ['storeId'] = $instance->GetStore ()->GetId ();
-			$valueData ['deskId'] = $instance->GetDesk ()->GetId ();
-			$valueData ['deskTitle'] = $instance->GetDesk ()->GetTitle ();
-			$valueData ['receivableMoney'] = $instance->GetReceivableMoney ();
-			$valueData ['realMoney'] = $instance->GetRealMoney ();
-			$valueData ['orderOperatorId'] = $instance->GetOrderOperator ()->GetId ();
-			$valueData ['orderOperatorNickname'] = $instance->GetOrderOperator ()->GetNickname ();
-			$valueData ['orderTime'] = $instance->GetOrderTime ();
-			if (! is_null ( $instance->GetSettlementOperator () )) {
-				$valueData ['settlementOperatorId'] = $instance->GetSettlementOperator ()->GetId ();
-				$valueData ['settlementOperatorTitle'] = $instance->GetSettlementOperator ()->GetNickname ();
-			}
-			$valueData ['settlementTime'] = $instance->GetSettlementTime ();
-			$valueData ['status'] = $instance->GetStatus ();
-			$valueData ['statusDescription'] = Business_Enum_OrderStatus::GetDescription ( $instance->GetStatus () );
-			$valueData ['remark'] = $instance->GetRemark ();
-			// if (! is_null ( $instance->GetPaymentMethod () )) {
-			// $valueData ['paymentMethodId'] = $instance->GetPaymentMethod ()->GetId ();
-			// $valueData ['paymentMethodTitle'] = $instance->GetPaymentMethod ()->GetTitle ();
-			// }
-			$valueData ['otime'] = $instance->GetOtime ();
-			
-			$listCollection [] = $valueData;
+	public static function SearchOrderList($storeId, $statusId, $startDate, $endDate) {
+		$storeString = $storeId == "" ? "" : " AND F3_A302=$storeId";
+		$statusString = $statusId == "" ? "" : " AND F12_A302=$statusId";
+		$startDateString = $startDate == "" ? "" : " AND DATE_FORMAT(F9_A302,'%Y-%m-%d') >= '$startDate'";
+		$endDateString = $endDate == "" ? "" : " AND DATE_FORMAT(F9_A302,'%Y-%m-%d') <= '$endDate'";
+		
+		$sqlString = "SELECT ID FROM A_302 WHERE 1=1
+			$storeString
+			$statusString
+			$startDateString
+			$endDateString
+			ORDER BY OTIME DESC
+		";
+		
+		$table = new Custom_Adapter ();
+		$db = $table->getAdapter ();
+		$data = $db->fetchAll ( $sqlString );
+		$objectList = array ();
+		
+		foreach ( $data as $value ) {
+			$objectList [] = $value ['ID'];
 		}
-		return $listCollection;
+		return $objectList;
 	}
 
 	public static function GetOrderDetailListByOrder($orderId) {
@@ -134,25 +98,6 @@ class Business_Script_List {
 			$objectList [] = $value ['ID'];
 		}
 		return $objectList;
-	}
-
-	public static function GetOrderDetailFieldData($list) {
-		$listCollection = array ();
-		foreach ( $list as $id ) {
-			$instance = new Business_Script_OrderDetail ( $id );
-			
-			$valueData = array ();
-			$valueData ['id'] = $instance->GetId ();
-			$valueData ['orderId'] = $instance->GetOrder ()->GetId ();
-			$valueData ['userId'] = $instance->GetUser () == null ? 0 : $instance->GetUser ()->GetId ();
-			$valueData ['userNickname'] = $instance->GetUser () == null ? '' : $instance->GetUser ()->GetNickname ();
-			$valueData ['unitPrice'] = $instance->GetUnitPrice ();
-			$valueData ['isMakeUp'] = $instance->GetIsMakeUp ();
-			$valueData ['otime'] = $instance->GetOtime ();
-			
-			$listCollection [] = $valueData;
-		}
-		return $listCollection;
 	}
 
 	public static function GetOrderDetailIntegralByDetailList($detailId) {
@@ -213,23 +158,5 @@ class Business_Script_List {
 		$db = $table->getAdapter ();
 		$data = $db->fetchAll ( $sqlString );
 		return $data;
-	}
-
-	public static function GetDeskFieldData($list) {
-		$listCollection = array ();
-		foreach ( $list as $id ) {
-			$instance = new Business_Script_Desk ( $id );
-			
-			$valueData = array ();
-			$valueData ['id'] = $instance->GetId ();
-			$valueData ['title'] = $instance->GetTitle ();
-			$valueData ['isEnabled'] = $instance->GetIsEnabled ();
-			$valueData ['storeId'] = $instance->GetStore () == null ? 0 : $instance->GetStore ()->GetId ();
-			$valueData ['storeName'] = $instance->GetStore () == null ? '' : $instance->GetStore ()->GetName ();
-			$valueData ['otime'] = $instance->GetOtime ();
-			
-			$listCollection [] = $valueData;
-		}
-		return $listCollection;
 	}
 }

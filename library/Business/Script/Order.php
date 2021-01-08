@@ -127,8 +127,6 @@ class Business_Script_Order extends Object_Script_Order {
 	 *        	实收金额
 	 * @param Business_User_Base $settlementOperator
 	 *        	结算操作员
-	 * @param unknown $paymentMethod
-	 *        	结算方式
 	 * @param array $orderDetailList
 	 *        	明细列表
 	 * @return Business_Script_Order NULL
@@ -152,8 +150,9 @@ class Business_Script_Order extends Object_Script_Order {
 	/**
 	 * 更改订单明细列表
 	 *
-	 * @param unknown $orderId        	
-	 * @param unknown $newOrderDetailList        	
+	 * @param number $orderId        	
+	 * @param array $newOrderDetailList
+	 *        	@use SetOrderSettlement(设置订单结算)
 	 */
 	private function changeOrderDetailList($orderId, $newOrderDetailList) {
 		$realMoney = 0;
@@ -162,9 +161,11 @@ class Business_Script_Order extends Object_Script_Order {
 			$isPay = $value ['isPay'];
 			$discount = $value ['discount'];
 			$discountPrice = $value ['discountPrice'];
+			$parmentMethod = $value ['parmentMethod'];
+			$parmentMethodObj = new Business_Option_ParmentMethod ( $parmentMethod );
 			
 			$orderDetail = new Business_Script_OrderDetail ( $orderDetailId );
-			$orderDetail->ChangeOrderDetail ( $isPay, $discount, $discountPrice );
+			$orderDetail->ChangeOrderDetail ( $isPay, $discount, $discountPrice, $parmentMethodObj );
 			$realMoney += $discountPrice;
 			
 			if (array_key_exists ( 'orderDetailIntegralList', $value )) {

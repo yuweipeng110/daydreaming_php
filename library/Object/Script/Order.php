@@ -457,34 +457,6 @@ class Object_Script_Order extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
-	/**
-	 * 结算方式
-	 *
-	 * @var unknown
-	 */
-	private $paymentMethod = null;
-
-	/**
-	 * 获取结算方式
-	 *
-	 * @return string
-	 */
-	public function GetPaymentMethod() {
-		return $this->paymentMethod;
-	}
-
-	/**
-	 * 设置结算方式
-	 *
-	 * @param string $paymentMethod        	
-	 */
-	public function SetPaymentMethod($paymentMethod) {
-		if ($this->paymentMethod != $paymentMethod) {
-			$this->paymentMethod = $paymentMethod;
-			$this->isValueChanged = true;
-		}
-	}
 
 	/**
 	 * 构造函数

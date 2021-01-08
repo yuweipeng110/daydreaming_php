@@ -184,15 +184,13 @@ class Object_Script_OrderDetail extends Data_Object {
 		}
 	}
 	
-
-
 	/**
 	 * 结算价格
 	 *
 	 * @var DECIMAL(10,2)
 	 */
 	private $settlementPrice = 0.00;
-	
+
 	/**
 	 * 获取结算价格
 	 *
@@ -201,15 +199,50 @@ class Object_Script_OrderDetail extends Data_Object {
 	public function GetSettlementPrice() {
 		return $this->settlementPrice;
 	}
-	
+
 	/**
 	 * 设置结算价格
 	 *
-	 * @param DECIMAL(10,2) $settlementPrice
+	 * @param DECIMAL(10,2) $settlementPrice        	
 	 */
 	public function SetSettlementPrice($settlementPrice) {
 		if ($this->settlementPrice != sprintf ( "%.2f", $settlementPrice )) {
 			$this->settlementPrice = sprintf ( "%.2f", $settlementPrice );
+			$this->isValueChanged = true;
+		}
+	}
+	
+
+
+	/**
+	 * 结算方式
+	 *
+	 * @var Object_Script_ParmentMethod
+	 */
+	private $paymentMethod = null;
+	
+	/**
+	 * 获取结算方式
+	 *
+	 * @return Object_Script_ParmentMethod
+	 */
+	public function GetPaymentMethod() {
+		$paymentMethod = new Object_Script_ParmentMethod ( $this->paymentMethod );
+		if ($paymentMethod->GetId () > 0) {
+			return $paymentMethod;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * 设置结算方式
+	 *
+	 * @param Object_Script_ParmentMethod $paymentMethod
+	 */
+	public function SetPaymentMethod(Object_Script_ParmentMethod $paymentMethod) {
+		if ($this->paymentMethod != $paymentMethod->GetId ()) {
+			$this->paymentMethod = $paymentMethod->GetId ();
 			$this->isValueChanged = true;
 		}
 	}
@@ -250,7 +283,8 @@ class Object_Script_OrderDetail extends Data_Object {
 			$this->SetUnitPrice ( $data ['F3_A303'] );
 			$this->SetIsPay ( $data ['F4_A303'] );
 			$this->SetDiscount ( $data ['F5_A303'] );
-			$this->SetSettlementPrice($data['F6_A303']);
+			$this->SetSettlementPrice ( $data ['F6_A303'] );
+			$this->paymentMethod = $data ['F7_A303'];
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -271,8 +305,9 @@ class Object_Script_OrderDetail extends Data_Object {
 				'F2_A303' => $this->user,
 				'F3_A303' => $this->GetUnitPrice (),
 				'F4_A303' => $this->GetIsPay (),
-				'F5_A303' => $this->GetDiscount () ,
-				'F6_A303' => $this->GetSettlementPrice()
+				'F5_A303' => $this->GetDiscount (),
+				'F6_A303' => $this->GetSettlementPrice (),
+				'F7_A303' => $this->paymentMethod 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

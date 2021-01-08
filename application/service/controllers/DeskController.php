@@ -33,7 +33,7 @@ class Service_DeskController extends Custom_Webpage {
 		$deskList = Business_Script_List::GetDeskList ();
 		$paginate = new Paginate ( $deskList, $pageRecords, $currentPage );
 		
-		$listCollection = Business_Script_List::GetDeskFieldData ( $paginate->CurrentRecord () );
+		$listCollection = Business_Script_Tool::GetDeskListFieldData ( $paginate->CurrentRecord () );
 		
 		$message = array (
 				"code" => 10200,

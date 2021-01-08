@@ -112,6 +112,10 @@ class Business_Script_Tool {
 		$valueData ['unitPrice'] = $instance->GetUnitPrice ();
 		$valueData ['isPay'] = $instance->GetIsPay ();
 		$valueData ['discount'] = $instance->GetDiscount ();
+		if (! is_null ( $instance->GetPaymentMethod () )) {
+			$valueData ['paymentMethodId'] = $instance->GetPaymentMethod ()->GetId ();
+			$valueData ['paymentMethodInfo'] = Business_Option_Tool::GetPaymentMethodFieldData ( $instance->GetPaymentMethod ()->GetId () );
+		}
 		$valueData ['otime'] = $instance->GetOtime ();
 		
 		return $valueData;
