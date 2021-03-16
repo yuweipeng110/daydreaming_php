@@ -21,7 +21,7 @@ class Business_Script_List {
 		$storeString = $storeId == "" ? "" : " AND F2_A301=$storeId";
 		$titleString = $title == "" ? "" : " AND F1_A301 LIKE '%$title%'";
 		$typeString = $type == "" ? "" : " AND F3_A301 LIKE '%$type%'";
-		$applicableNumberString = $applicableNumber == "" ? "" : " AND F8_A301=$applicableNumber";
+		$applicableNumberString = $applicableNumber == "" ? "" : " AND F8_A301 LIKE '%$applicableNumber%'";
 		$isAdaptString = $isAdapt == "" ? "" : " AND F10_A301=$isAdapt";
 		
 		$sqlString = "SELECT ID FROM A_301 WHERE 1=1
@@ -61,7 +61,7 @@ class Business_Script_List {
 
 	public static function SearchOrderList($storeId, $statusId, $startDate, $endDate) {
 		$storeString = $storeId == "" ? "" : " AND F3_A302=$storeId";
-		$statusString = $statusId == "" ? "" : " AND F12_A302=$statusId";
+		$statusString = $statusId == "0" ? "" : " AND F12_A302=$statusId";
 		$startDateString = $startDate == "" ? "" : " AND DATE_FORMAT(F9_A302,'%Y-%m-%d') >= '$startDate'";
 		$endDateString = $endDate == "" ? "" : " AND DATE_FORMAT(F9_A302,'%Y-%m-%d') <= '$endDate'";
 		

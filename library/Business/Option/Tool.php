@@ -6,7 +6,7 @@ class Business_Option_Tool {
 		if ($id <= 0) {
 			return array ();
 		}
-		$instance = new Business_Option_ParmentMethod ( $id );
+		$instance = new Business_Option_PaymentMethod ( $id );
 		
 		$valueData = array ();
 		$valueData ['id'] = $instance->GetId ();

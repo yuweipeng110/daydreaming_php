@@ -113,7 +113,7 @@ class Object_Script_OrderDetailIntegral extends Data_Object {
 	 * @return number
 	 */
 	public function GetIntegral() {
-		return $this->integral;
+		return (int) $this->integral;
 	}
 
 	/**

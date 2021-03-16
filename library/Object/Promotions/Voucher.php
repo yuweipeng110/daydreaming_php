@@ -126,7 +126,7 @@ class Object_Promotions_Voucher extends Data_Object {
 	 * @return number
 	 */
 	public function GetActivationMode() {
-		return $this->activationMode;
+		return (int) $this->activationMode;
 	}
 
 	/**

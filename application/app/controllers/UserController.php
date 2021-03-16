@@ -1,7 +1,8 @@
 <?php
 header ( "Content-type:text/html;charset=utf-8" );
+header ( "Content-type:application/json" );
 
-class Service_UserController extends Zend_Controller_Action {
+class App_UserController extends Zend_Controller_Action {
 	private $json = "";
 	private $param = null;
 	private $data = array ();
@@ -12,6 +13,7 @@ class Service_UserController extends Zend_Controller_Action {
 		$this->params = $this->getAllParams ();
 		if ($this->json) {
 			$this->data = Zend_Json::decode ( $this->json );
+			// var_dump($this->json);
 			// SESSION OK
 		}
 		// else {
@@ -29,8 +31,8 @@ class Service_UserController extends Zend_Controller_Action {
 	 * 获取门店列表
 	 */
 	public function getStoreListAction() {
-		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
-		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		$current = isset ( $this->params ['current'] ) ? $this->params ['current'] : 1;
+		$pageSize = isset ( $this->params ['pageSize'] ) ? $this->params ['pageSize'] : 10;
 		
 		$userName = $this->params ['userName'];
 		$storeName = $this->params ['storeName'];
@@ -38,7 +40,7 @@ class Service_UserController extends Zend_Controller_Action {
 		$phone = $this->params ['phoneNumber'];
 		
 		$storeList = Business_User_List::SearchStoreList ( $userName, $storeName, $status, $phone );
-		$paginate = new Paginate ( $storeList, $pageRecords, $currentPage );
+		$paginate = new Paginate ( $storeList, $pageSize, $current );
 		
 		$listCollection = Business_User_Tool::GetStoreListFieldData ( $paginate->CurrentRecord () );
 		
@@ -47,7 +49,8 @@ class Service_UserController extends Zend_Controller_Action {
 				"msg" => '成功',
 				"data" => $listCollection,
 				"time" => date ( 'Y-m-d H:i:s' ),
-				'pageCount' => $paginate->PageCount () 
+				'pageCount' => $paginate->PageCount (),
+				'total' => $paginate->DataCount () 
 		);
 		echo JsonData::ResultNotEncrypt ( $message );
 		exit ();
@@ -125,15 +128,17 @@ class Service_UserController extends Zend_Controller_Action {
 	}
 
 	public function getUserListAction() {
-		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
-		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		$current = isset ( $this->params ['current'] ) ? $this->params ['current'] : 1;
+		$pageSize = isset ( $this->params ['pageSize'] ) ? $this->params ['pageSize'] : 10;
 		
 		$storeId = $this->params ['storeId'];
 		$nickname = $this->params ['nickname'];
 		$phone = $this->params ['phone'];
+		$roleId = $this->params ['roleId'];
+		$isHost = $this->params ['isHost'];
 		
-		$userList = Business_User_List::SearchUserList ( $storeId, $nickname, $phone );
-		$paginate = new Paginate ( $userList, $pageRecords, $currentPage );
+		$userList = Business_User_List::SearchUserList ( $storeId, $nickname, $phone, $roleId, $isHost );
+		$paginate = new Paginate ( $userList, $pageSize, $current );
 		
 		$listCollection = Business_User_Tool::GetUserListFieldData ( $paginate->CurrentRecord () );
 		
@@ -142,7 +147,33 @@ class Service_UserController extends Zend_Controller_Action {
 				"msg" => '成功',
 				"data" => $listCollection,
 				"time" => date ( 'Y-m-d H:i:s' ),
-				'pageCount' => $paginate->PageCount () 
+				'pageCount' => $paginate->PageCount (),
+				'total' => $paginate->DataCount () 
+		);
+		echo JsonData::ResultNotEncrypt ( $message );
+		exit ();
+	}
+
+	public function getHostListAction() {
+		$current = isset ( $this->params ['current'] ) ? $this->params ['current'] : 1;
+		$pageSize = isset ( $this->params ['pageSize'] ) ? $this->params ['pageSize'] : 10;
+		
+		$storeId = $this->params ['storeId'];
+		$nickname = $this->params ['nickname'];
+		$phone = $this->params ['phone'];
+		
+		$userList = Business_User_List::SearchHostList ( $storeId, $nickname, $phone );
+		$paginate = new Paginate ( $userList, $pageSize, $current );
+		
+		$listCollection = Business_User_Tool::GetUserListFieldData ( $paginate->CurrentRecord () );
+		
+		$message = array (
+				"code" => 10200,
+				"msg" => '成功',
+				"data" => $listCollection,
+				"time" => date ( 'Y-m-d H:i:s' ),
+				'pageCount' => $paginate->PageCount (),
+				'total' => $paginate->DataCount () 
 		);
 		echo JsonData::ResultNotEncrypt ( $message );
 		exit ();
@@ -152,14 +183,15 @@ class Service_UserController extends Zend_Controller_Action {
 	 * 获取玩家列表
 	 */
 	public function getPlayerListAction() {
-		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
-		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		$current = isset ( $this->params ['current'] ) ? $this->params ['current'] : 1;
+		$pageSize = isset ( $this->params ['pageSize'] ) ? $this->params ['pageSize'] : 10;
 		
+		$storeId = $this->params ['storeId'];
 		$nickname = $this->params ['nickname'];
 		$phone = $this->params ['phone'];
 		
-		$playerList = Business_User_List::SearchPlayerList ( $nickname, $phone );
-		$paginate = new Paginate ( $playerList, $pageRecords, $currentPage );
+		$playerList = Business_User_List::SearchPlayerList ( $storeId, $nickname, $phone );
+		$paginate = new Paginate ( $playerList, $pageSize, $current );
 		
 		$listCollection = Business_User_Tool::GetUserListFieldData ( $paginate->CurrentRecord () );
 		
@@ -168,7 +200,8 @@ class Service_UserController extends Zend_Controller_Action {
 				"msg" => '成功',
 				"data" => $listCollection,
 				"time" => date ( 'Y-m-d H:i:s' ),
-				'pageCount' => $paginate->PageCount () 
+				'pageCount' => $paginate->PageCount (),
+				'total' => $paginate->DataCount () 
 		);
 		echo JsonData::ResultNotEncrypt ( $message );
 		exit ();
@@ -182,10 +215,11 @@ class Service_UserController extends Zend_Controller_Action {
 		$nickname = $this->data ['nickname'];
 		$sex = isset ( $this->data ['sex'] ) ? $this->data ['sex'] : 0;
 		$phone = $this->data ['phone'];
+		$birthday = $this->data ['birthday'];
 		$remark = $this->data ['remark'];
 		
 		$player = new Business_Webpage_User ();
-		$player->AddPlayer ( $storeId, $nickname, $sex, $phone, $remark );
+		$player->AddPlayer ( $storeId, $nickname, $sex, $phone, $birthday, $remark );
 		
 		$message = array (
 				"code" => $player->GetCode (),
@@ -207,10 +241,11 @@ class Service_UserController extends Zend_Controller_Action {
 		$nickname = $this->data ['nickname'];
 		$sex = isset ( $this->data ['sex'] ) ? $this->data ['sex'] : 0;
 		$phone = $this->data ['phone'];
+		$birthday = $this->data ['birthday'];
 		$remark = $this->data ['remark'];
 		
 		$user = new Business_Webpage_User ();
-		$result = $user->EditPlayer ( $playerId, $nickname, $sex, $phone, $remark );
+		$result = $user->EditPlayer ( $playerId, $nickname, $sex, $phone, $birthday, $remark );
 		
 		$message = array (
 				"code" => $user->GetCode (),
@@ -230,9 +265,10 @@ class Service_UserController extends Zend_Controller_Action {
 	public function accountRechargeAction() {
 		$userId = $this->data ['userId'];
 		$rechargeAmount = $this->data ['rechargeAmount'];
+		$paymentMethodId = $this->data ['paymentMethodId'];
 		
 		$user = new Business_Webpage_User ();
-		$result = $user->AccountRecharge ( $userId, $rechargeAmount );
+		$result = $user->AccountRecharge ( $userId, $rechargeAmount, $paymentMethodId );
 		
 		$message = array (
 				"code" => $user->GetCode (),
@@ -250,8 +286,8 @@ class Service_UserController extends Zend_Controller_Action {
 	 * 获取剧本列表
 	 */
 	public function getScriptListAction() {
-		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
-		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		$current = isset ( $this->params ['current'] ) ? $this->params ['current'] : 1;
+		$pageSize = isset ( $this->params ['pageSize'] ) ? $this->params ['pageSize'] : 10;
 		
 		$storeId = $this->params ['storeId'];
 		$title = $this->params ['title'];
@@ -260,7 +296,7 @@ class Service_UserController extends Zend_Controller_Action {
 		$isAdapt = $this->params ['isAdapt'];
 		
 		$playerList = Business_Script_List::SearchScriptList ( $storeId, $title, $type, $applicableNumber, $isAdapt );
-		$paginate = new Paginate ( $playerList, $pageRecords, $currentPage );
+		$paginate = new Paginate ( $playerList, $pageSize, $current );
 		
 		$listCollection = Business_Script_Tool::GetScriptListFieldData ( $paginate->CurrentRecord () );
 		
@@ -269,7 +305,8 @@ class Service_UserController extends Zend_Controller_Action {
 				"msg" => '成功',
 				"data" => $listCollection,
 				"time" => date ( 'Y-m-d H:i:s' ),
-				'pageCount' => $paginate->PageCount () 
+				'pageCount' => $paginate->PageCount (),
+				'total' => $paginate->DataCount () 
 		);
 		echo JsonData::ResultNotEncrypt ( $message );
 		exit ();
@@ -309,14 +346,16 @@ class Service_UserController extends Zend_Controller_Action {
 		$type = $this->data ['type'];
 		$amount = isset ( $this->data ['amount'] ) ? $this->data ['amount'] : 1;
 		$costPrice = $this->data ['costPrice'];
+		$formatPrice = $this->data ['formatPrice'];
 		$description = $this->data ['description'];
 		$applicableNumber = $this->data ['applicableNumber'];
 		$gameTime = $this->data ['gameTime'];
 		$isAdapt = $this->data ['isAdapt'];
 		$adaptContent = $this->data ['adaptContent'];
+		$content = trim($this->data ['content']);
 		
 		$script = new Business_Webpage_Script ();
-		$script->EditScript ( $scriptId, $title, $type, $amount, $costPrice, $description, $applicableNumber, $gameTime, $isAdapt, $adaptContent );
+		$script->EditScript ( $scriptId, $title, $type, $amount, $costPrice, $formatPrice, $description, $applicableNumber, $gameTime, $isAdapt, $adaptContent, $content );
 		
 		$message = array (
 				"code" => $script->GetCode (),
@@ -331,11 +370,11 @@ class Service_UserController extends Zend_Controller_Action {
 	}
 
 	public function getRoleListAction() {
-		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
-		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		$current = isset ( $this->params ['current'] ) ? $this->params ['current'] : 1;
+		$pageSize = isset ( $this->params ['pageSize'] ) ? $this->params ['pageSize'] : 10;
 		
 		$roleList = Business_User_List::GetRoleList ();
-		$paginate = new Paginate ( $roleList, $pageRecords, $currentPage );
+		$paginate = new Paginate ( $roleList, $pageSize, $current );
 		
 		$listCollection = Business_User_Tool::GetRoleListFieldData ( $paginate->CurrentRecord () );
 		
@@ -344,20 +383,21 @@ class Service_UserController extends Zend_Controller_Action {
 				"msg" => '成功',
 				"data" => $listCollection,
 				"time" => date ( 'Y-m-d H:i:s' ),
-				'pageCount' => $paginate->PageCount () 
+				'pageCount' => $paginate->PageCount (),
+				'total' => $paginate->DataCount () 
 		);
 		echo JsonData::ResultNotEncrypt ( $message );
 		exit ();
 	}
 
 	public function getRankListByRoleAction() {
-		$currentPage = isset ( $this->params ['currentPage'] ) ? $this->params ['currentPage'] : 1;
-		$pageRecords = isset ( $this->params ['pageRecords'] ) ? $this->params ['pageRecords'] : 10;
+		$current = isset ( $this->params ['current'] ) ? $this->params ['current'] : 1;
+		$pageSize = isset ( $this->params ['pageSize'] ) ? $this->params ['pageSize'] : 10;
 		
 		$roleId = $this->params ['roleId'];
 		
 		$roleList = Business_User_List::GetRankListByRole ( $roleId );
-		$paginate = new Paginate ( $roleList, $pageRecords, $currentPage );
+		$paginate = new Paginate ( $roleList, $pageSize, $current );
 		
 		$listCollection = Business_User_Tool::GetRankListFieldData ( $paginate->CurrentRecord () );
 		
@@ -366,7 +406,8 @@ class Service_UserController extends Zend_Controller_Action {
 				"msg" => '成功',
 				"data" => $listCollection,
 				"time" => date ( 'Y-m-d H:i:s' ),
-				'pageCount' => $paginate->PageCount () 
+				'pageCount' => $paginate->PageCount (),
+				'total' => $paginate->DataCount () 
 		);
 		echo JsonData::ResultNotEncrypt ( $message );
 		exit ();

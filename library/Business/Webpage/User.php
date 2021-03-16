@@ -7,7 +7,7 @@ class Business_Webpage_User extends Data_Explain {
 	 *
 	 * @return boolean
 	 */
-	public function AddPlayer($storeId, $nickname, $sex, $phone, $remark) {
+	public function AddPlayer($storeId, $nickname, $sex, $phone, $birthday, $remark) {
 		$result = false;
 		$resultCode = 0;
 		if (isset ( $storeId ) && isset ( $nickname ) && isset ( $phone )) {
@@ -15,8 +15,8 @@ class Business_Webpage_User extends Data_Explain {
 				$player = new Business_User_Player_Base ();
 				$store = new Business_User_Store ( $storeId );
 				
-// 				$createPlayer = true;
-				$createPlayer = $player->CreatePlayer ( $store, $nickname, $sex, $phone, $remark );
+				// $createPlayer = true;
+				$createPlayer = $player->CreatePlayer ( $store, $nickname, $sex, $phone, $birthday, $remark );
 				
 				if ($createPlayer != null) {
 					
@@ -54,7 +54,7 @@ class Business_Webpage_User extends Data_Explain {
 		return true;
 	}
 
-	public function EditPlayer($playerId, $nickname, $sex, $phone, $remark) {
+	public function EditPlayer($playerId, $nickname, $sex, $phone, $birthday, $remark) {
 		$result = false;
 		$resultCode = 0;
 		if (isset ( $playerId )) {
@@ -74,6 +74,7 @@ class Business_Webpage_User extends Data_Explain {
 				$player->SetNickname ( $nickname );
 				$player->SetSex ( $sex );
 				$player->SetPhone ( $phone );
+				$player->SetBirthday ( $birthday );
 				$player->SetRemark ( $remark );
 				$player->Save ();
 				
@@ -92,14 +93,14 @@ class Business_Webpage_User extends Data_Explain {
 
 	/**
 	 * 账户充值
-	 * 
+	 *
 	 * @param number $userId
 	 *        	用户ID
 	 * @param decimal(10,2) $rechargeAmount
 	 *        	充值金额
 	 * @return boolean
 	 */
-	public function AccountRecharge($userId, $rechargeAmount) {
+	public function AccountRecharge($userId, $rechargeAmount, $paymentMethodId) {
 		$result = false;
 		$resultCode = 0;
 		if (isset ( $userId ) && isset ( $rechargeAmount )) {
@@ -108,7 +109,8 @@ class Business_Webpage_User extends Data_Explain {
 			$changeMoney = $rechargeAmount;
 			$changeMode = new Business_Enum_Money ( 'MANUAL_IN' );
 			$changeType = 1;
-			$result = $user->AddMoney ( $changeMoney, $changeMode, $changeType );
+			$paymentMethod = new Business_Option_PaymentMethod ( $paymentMethodId );
+			$result = $user->AddMoney ( $changeMoney, $changeMode, $changeType, $paymentMethod );
 			
 			if ($result != null) {
 				

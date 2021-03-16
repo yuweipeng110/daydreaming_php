@@ -1,7 +1,7 @@
 <?php
 header ( "Content-type:text/html;charset=utf-8" );
 
-class Service_SigninController extends Custom_Webpage {
+class App_SigninController extends Custom_Webpage {
 
 	/**
 	 * 登陆验证

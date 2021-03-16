@@ -1,4 +1,5 @@
 <?php
+header ( "Content-type:text/html;charset=utf-8" );
 
 class IndexController extends Zend_Controller_Action {
 	private $timeout = 600;
@@ -37,38 +38,74 @@ class IndexController extends Zend_Controller_Action {
 		
 		print_r ( $selfMenu );
 	}
-	
-	public function index1Action(){
-		$startDate = '2020-12-01';
-		$endDate = '2020-12-31';
-		print_r(Business_Statistics_Account::GetAccountDayStatisticsFromDate($startDate, $endDate));
+
+	public function index1Action() {
+		$orderId = 16;
+		$userId = 1;
+		$isPay = 1;
 		
-		$user = new Business_User_Base ( 6 );
-		var_dump('balanceMoney:',$user->GetBalance());
-		var_dump('voucherMoney:',$user->GetVoucherBalance());
-		die('x');
+		$order = new Business_Script_Order ( $orderId );
+		$orderDetail = new Business_Script_OrderDetail ();
+		$user = new Business_User_Base ( $userId );
+		
+		$orderDetailIntegral = $orderDetail->CreateOrderDetail ( $order, $user, $isPay );
+		print_r ( $orderDetailIntegral->GetId () );
+		die ( 'x' );
+		// print_r(XMLDIR.'/player1.csv');
+		// $result = $this->import_csv(XMLDIR.'/player1.xls');
+		// print_r($result);
+		die ( 'x' );
+		$user = new Business_User_Base ( 7 );
+		$discountPrice = 10;
+		$result = $user->AddMoney ( ($discountPrice * - 1), new Business_Enum_Money ( 'ORDER_OUT' ), 1, new Business_Option_PaymentMethod ( 4 ), null );
+		var_dump ( $result );
+		die ( 'x' );
+	}
+
+	public function loadXlsData($filename) {
+		set_time_limit ( 0 );
+		require_once (PUBLICDIR . '/tool/PHPExcel/Classes/PHPExcel.php');
+		// $objPHPExcel = new PHPExcel();//实例化PHPExcel类
+		$objPHPExcel = PHPExcel_IOFactory::load ( $filename ); // 加载文件
+		
+		$dataArr = array ();
+		foreach ( $objPHPExcel->getWorksheetIterator () as $k1 => $sheet ) { // 循环取sheet
+			foreach ( $sheet->getRowIterator () as $k2 => $row ) { // 逐行处理
+				if ($row->getRowIndex () < 2) {
+					continue;
+				}
+				foreach ( $row->getCellIterator () as $k3 => $cell ) { // 逐列读取
+					$data = $cell->getValue (); // 获取单元格数据
+					                            // echo $data." ";
+					$dataArr [$k2] [$k3] = $data;
+				}
+				// echo '<br>';
+			}
+			// echo '<br>';
+		}
+		return $dataArr;
 	}
 
 	public function indexAction() {
-// 		$user = new Business_User_Base ( 6 );
-// 		$changeMoney = 60 * -1;
-// 		$changeMode = new Business_Enum_Money('ORDER_OUT');
-// 		$changeType = 1;
-// 		$result = $user->AddMoney($changeMoney, $changeMode,$changeType);
-// 		var_dump($result);
-// 		die('x');
+		// $user = new Business_User_Base ( 6 );
+		// $changeMoney = 60 * -1;
+		// $changeMode = new Business_Enum_Money('ORDER_OUT');
+		// $changeType = 1;
+		// $result = $user->AddMoney($changeMoney, $changeMode,$changeType);
+		// var_dump($result);
+		// die('x');
 		$user = new Business_User_Base ( 6 );
 		$changeMoney = 500;
 		$changeType = 1;
 		$changeMode = new Business_Enum_Money ( 'MANUAL_IN' );
-		$result = $user->AddMoney ( $changeMoney, $changeMode,$changeType );
+		$result = $user->AddMoney ( $changeMoney, $changeMode, $changeType );
 		var_dump ( $result );
 		die ( 'xx' );
-// 		$user = new Business_User_Base ( 7 );
-// 		$changeMoney = 1000;
-// 		$changeMode = new Business_Enum_Money ( 'MANUAL_IN' );
-// 		$user->AddMoney ( $changeMoney, $changeMode );
-// 		die ( 'xx' );
+		// $user = new Business_User_Base ( 7 );
+		// $changeMoney = 1000;
+		// $changeMode = new Business_Enum_Money ( 'MANUAL_IN' );
+		// $user->AddMoney ( $changeMoney, $changeMode );
+		// die ( 'xx' );
 		$now = sprintf ( "%.0f", Func::GetMillisecond () / 1000 );
 		$timestamp = ( int ) time ();
 		$timeResult = $now - $timestamp;

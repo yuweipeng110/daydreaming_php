@@ -415,7 +415,7 @@ class Object_Script_Order extends Data_Object {
 	 * @return number
 	 */
 	public function GetStatus() {
-		return $this->status;
+		return (int) $this->status;
 	}
 
 	/**
@@ -502,7 +502,6 @@ class Object_Script_Order extends Data_Object {
 			$this->SetSettlementTime ( $data ['F11_A302'] );
 			$this->SetStatus ( $data ['F12_A302'] );
 			$this->SetRemark ( $data ['F13_A302'] );
-			$this->paymentMethod = $data ['F14_A302'];
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -532,7 +531,6 @@ class Object_Script_Order extends Data_Object {
 				'F11_A302' => $this->GetSettlementTime (),
 				'F12_A302' => $this->GetStatus (),
 				'F13_A302' => $this->GetRemark (),
-				'F14_A302' => $this->paymentMethod 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

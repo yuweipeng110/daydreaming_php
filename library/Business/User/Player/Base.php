@@ -8,7 +8,7 @@ class Business_User_Player_Base extends Business_User_Base {
 	 * @param Business_User_Store $store        	
 	 * @return boolean
 	 */
-	public function CreatePlayer(Business_User_Store $store, $nickname, $sex, $phone, $remark) {
+	public function CreatePlayer(Business_User_Store $store, $nickname, $sex, $phone, $birthday, $remark) {
 		if ($this->GetId () == 0) {
 			$role = 3;
 			
@@ -17,6 +17,7 @@ class Business_User_Player_Base extends Business_User_Base {
 			$this->SetNickname ( $nickname );
 			$this->SetSex ( $sex );
 			$this->SetPhone ( $phone );
+			$this->SetBirthday ( $birthday );
 			$this->SetRemark ( $remark );
 			$this->Save ();
 			

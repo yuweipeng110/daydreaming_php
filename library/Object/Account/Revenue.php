@@ -1,11 +1,11 @@
 <?php
 
 /**
- * 用户积分流水信息表
+ * 门店营收流水表
  * @author xy
  *
  */
-class Object_Account_Integral extends Data_Object {
+class Object_Account_Revenue extends Data_Object {
 	
 	/**
 	 * 属性是否发生更改
@@ -58,29 +58,29 @@ class Object_Account_Integral extends Data_Object {
 	}
 	
 	/**
-	 * 变动积分
+	 * 变动金额
 	 *
-	 * @var number
+	 * @var DECIMAL(10,2)
 	 */
-	private $changeIntegral = 0;
+	private $changeMoney = 0.00;
 
 	/**
-	 * 获取变动积分
+	 * 获取变动金额
 	 *
-	 * @return number
+	 * @return DECIMAL(10,2)
 	 */
-	public function GetChangeIntegral() {
-		return ( int ) $this->changeIntegral;
+	public function GetChangeMoney() {
+		return sprintf ( "%.2f", $this->changeMoney );
 	}
 
 	/**
-	 * 设置变动积分
+	 * 设置变动金额
 	 *
-	 * @param number $changeIntegral        	
+	 * @param DECIMAL(10,2) $changeMoney        	
 	 */
-	public function SetChangeIntegral($changeIntegral) {
-		if ($this->changeIntegral != $changeIntegral) {
-			$this->changeIntegral = $changeIntegral;
+	public function SetChangeMoney($changeMoney) {
+		if ($this->changeMoney != sprintf ( "%.2f", $changeMoney )) {
+			$this->changeMoney = sprintf ( "%.2f", $changeMoney );
 			$this->isValueChanged = true;
 		}
 	}
@@ -170,34 +170,138 @@ class Object_Account_Integral extends Data_Object {
 	}
 	
 	/**
-	 * 段位类型枚举对象
+	 * 变动类型
 	 *
-	 * @var Object_User_Role
+	 * @var number
 	 */
-	private $role = null;
+	private $changeType = 0;
 
 	/**
-	 * 获取段位类型枚举对象
+	 * 获取变动类型
 	 *
-	 * @return Object_User_Role
+	 * @return number
 	 */
-	public function GetRole() {
-		$role = new Object_User_Role ( $this->role );
-		if ($role->GetId () > 0) {
-			return $role;
+	public function GetChangeType() {
+		return ( int ) $this->changeType;
+	}
+
+	/**
+	 * 设置变动类型
+	 *
+	 * @param number $changeType        	
+	 */
+	public function SetChangeType($changeType) {
+		if ($this->changeType != $changeType) {
+			$this->changeType = $changeType;
+			$this->isValueChanged = true;
+		}
+	}
+	
+	/**
+	 * 门店对象
+	 *
+	 * @var Object_User_Store
+	 */
+	private $store = null;
+
+	/**
+	 * 获取门店对象
+	 *
+	 * @return Object_User_Store NULL
+	 */
+	public function GetStore() {
+		$store = new Object_User_Store ( $this->store );
+		if ($store->GetId () > 0) {
+			return $store;
 		} else {
 			return null;
 		}
 	}
 
 	/**
-	 * 设置段位类型枚举对象
+	 * 设置门店对象
 	 *
-	 * @param Object_User_Role $role        	
+	 * @param Object_User_Store $store        	
+	 * @throws Exception
 	 */
-	public function SetRole(Object_User_Role $role) {
-		if ($this->role != $role->GetId ()) {
-			$this->role = $role->GetId ();
+	public function SetStore(Object_User_Store $store) {
+		if (! is_null ( $store )) {
+			if (! is_null ( $this->store )) {
+				if ($this->store != $store->GetId ()) {
+					$this->store = $store->GetId ();
+					$this->isValueChanged = true;
+				}
+			} else {
+				$this->store = $store->GetId ();
+				$this->isValueChanged = true;
+			}
+		} else {
+			throw new Exception ( "store OBJECT IS NULL" );
+		}
+	}
+	
+	/**
+	 * 订单对象
+	 *
+	 * @var Object_Script_Order
+	 */
+	private $order = null;
+
+	/**
+	 * 获取订单对象
+	 *
+	 * @return Object_Script_Order
+	 */
+	public function GetOrder() {
+		$order = new Object_Script_Order ( $this->order );
+		if ($order->GetId () > 0) {
+			return $order;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 设置订单对象
+	 *
+	 * @param Object_Script_Order $order        	
+	 */
+	public function SetOrder(Object_Script_Order $order) {
+		if ($this->order != $order->GetId ()) {
+			$this->order = $order->GetId ();
+			$this->isValueChanged = true;
+		}
+	}
+	
+	/**
+	 * 支付方式
+	 *
+	 * @var Object_Script_ParmentMethod
+	 */
+	private $paymentMethod = null;
+
+	/**
+	 * 获取支付方式
+	 *
+	 * @return Object_Script_PaymentMethod
+	 */
+	public function GetPaymentMethod() {
+		$paymentMethod = new Object_Script_PaymentMethod ( $this->paymentMethod );
+		if ($paymentMethod->GetId () > 0) {
+			return $paymentMethod;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 设置支付方式
+	 *
+	 * @param Object_Script_PaymentMethod $paymentMethod        	
+	 */
+	public function SetPaymentMethod(Object_Script_PaymentMethod $paymentMethod) {
+		if ($this->paymentMethod != $paymentMethod->GetId ()) {
+			$this->paymentMethod = $paymentMethod->GetId ();
 			$this->isValueChanged = true;
 		}
 	}
@@ -208,10 +312,10 @@ class Object_Account_Integral extends Data_Object {
 	 * @param string $guid        	
 	 */
 	public function __construct($id = 0) {
-		$this->setTableName ( PROJECT . "_802" );
-		$this->setMemcacheId ( PROJECT . "_802" );
-		$this->setZendCacheId ( PROJECT . "_802" );
-		$this->setZendCacheDir ( "/A8/802" );
+		$this->setTableName ( PROJECT . "_803" );
+		$this->setMemcacheId ( PROJECT . "_803" );
+		$this->setZendCacheId ( PROJECT . "_803" );
+		$this->setZendCacheDir ( "/A8/803" );
 		$this->setCacheType ( 3 );
 		
 		parent::__construct ( $id );
@@ -233,12 +337,15 @@ class Object_Account_Integral extends Data_Object {
 	private function SetObjectProperty($data) {
 		if ($data != null) {
 			$this->SetId ( $data ['ID'] );
-			$this->user = $data ['F1_A802'];
-			$this->SetChangeIntegral ( $data ['F2_A802'] );
-			$this->SetChangeTime ( $data ['F3_A802'] );
-			$this->SetRemarkIncrease ( $data ['F4_A802'] );
-			$this->SetRemarkReduce ( $data ['F5_A802'] );
-			$this->role = $data ['F6_A802'];
+			$this->user = $data ['F1_A803'];
+			$this->SetChangeMoney ( $data ['F2_A803'] );
+			$this->SetChangeTime ( $data ['F3_A803'] );
+			$this->SetRemarkIncrease ( $data ['F4_A803'] );
+			$this->SetRemarkReduce ( $data ['F5_A803'] );
+			$this->SetChangeType ( $data ['F6_A803'] );
+			$this->store = $data ['F7_A803'];
+			$this->order = $data ['F8_A803'];
+			$this->paymentMethod = $data ['F9_A803'];
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -255,12 +362,15 @@ class Object_Account_Integral extends Data_Object {
 		if (! $this->isValueChanged)
 			return;
 		$data = array (
-				'F1_A802' => $this->user,
-				'F2_A802' => $this->GetChangeIntegral (),
-				'F3_A802' => $this->GetChangeTime (),
-				'F4_A802' => $this->GetRemarkIncrease (),
-				'F5_A802' => $this->GetRemarkReduce (),
-				'F6_A802' => $this->role 
+				'F1_A803' => $this->user,
+				'F2_A803' => $this->GetChangeMoney (),
+				'F3_A803' => $this->GetChangeTime (),
+				'F4_A803' => $this->GetRemarkIncrease (),
+				'F5_A803' => $this->GetRemarkReduce (),
+				'F6_A803' => $this->GetChangeType (),
+				'F7_A803' => $this->store,
+				'F8_A803' => $this->order,
+				'F9_A803' => $this->paymentMethod 
 		);
 		
 		$this->SafeParam ( $data );

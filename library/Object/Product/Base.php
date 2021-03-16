@@ -57,7 +57,7 @@ class Object_Product_Base extends Data_Object {
 	public function GetCategory() {
 		$category = new Object_Product_Category ( $this->category );
 		if ($category->GetId () > 0) {
-			return $store;
+			return $category;
 		} else {
 			return null;
 		}
@@ -84,15 +84,14 @@ class Object_Product_Base extends Data_Object {
 			throw new Exception ( "category OBJECT IS NULL" );
 		}
 	}
-
-
+	
 	/**
 	 * 成本价
 	 *
 	 * @var decimal(10,2)
 	 */
 	private $costPrice = 0.00;
-	
+
 	/**
 	 * 获取成本价
 	 *
@@ -101,11 +100,11 @@ class Object_Product_Base extends Data_Object {
 	public function GetCostPrice() {
 		return sprintf ( "%.2f", $this->costPrice );
 	}
-	
+
 	/**
 	 * 设置成本价
 	 *
-	 * @param decimal(10,2) $costPrice
+	 * @param decimal(10,2) $costPrice        	
 	 */
 	public function SetCostPrice($costPrice) {
 		if ($this->costPrice != sprintf ( "%.2f", $costPrice )) {
@@ -113,15 +112,14 @@ class Object_Product_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-
-
+	
 	/**
 	 * 零售价
 	 *
 	 * @var DECIMAL(10,2)
 	 */
 	private $salePrice = 0.00;
-	
+
 	/**
 	 * 获取零售价
 	 *
@@ -130,11 +128,11 @@ class Object_Product_Base extends Data_Object {
 	public function GetSalePrice() {
 		return sprintf ( "%.2f", $this->salePrice );
 	}
-	
+
 	/**
 	 * 设置零售价
 	 *
-	 * @param DECIMAL(10,2) $salePrice
+	 * @param DECIMAL(10,2) $salePrice        	
 	 */
 	public function SetSalePrice($salePrice) {
 		if ($this->salePrice != sprintf ( "%.2f", $salePrice )) {
@@ -142,15 +140,14 @@ class Object_Product_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-
-
+	
 	/**
 	 * 产品计量单位
 	 *
 	 * @var string
 	 */
 	private $units = "";
-	
+
 	/**
 	 * 获取计量单位
 	 *
@@ -159,11 +156,11 @@ class Object_Product_Base extends Data_Object {
 	public function GetUnits() {
 		return urldecode ( $this->units );
 	}
-	
+
 	/**
 	 * 设置计量单位
 	 *
-	 * @param string $units
+	 * @param string $units        	
 	 */
 	public function SetUnits($units) {
 		if ($this->units != urlencode ( $units )) {
@@ -171,27 +168,27 @@ class Object_Product_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-
+	
 	/**
 	 * 产品是否可用
 	 *
 	 * @var number
 	 */
 	private $isEnabled = 0;
-	
+
 	/**
 	 * 获取产品是否可用
 	 *
 	 * @return number
 	 */
 	public function GetIsEnabled() {
-		return $this->isEnabled;
+		return (int) $this->isEnabled;
 	}
-	
+
 	/**
 	 * 设置产品是否可用
 	 *
-	 * @param number $isEnabled
+	 * @param number $isEnabled        	
 	 */
 	public function SetIsEnabled($isEnabled) {
 		if ($this->isEnabled != $isEnabled) {
@@ -199,9 +196,6 @@ class Object_Product_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
-	
-	
 	
 	/**
 	 * 类型
@@ -216,7 +210,7 @@ class Object_Product_Base extends Data_Object {
 	 * @return number
 	 */
 	public function GetType() {
-		return $this->type;
+		return (int) $this->type;
 	}
 
 	/**
@@ -233,6 +227,7 @@ class Object_Product_Base extends Data_Object {
 	
 	/**
 	 * 所需积分
+	 * 
 	 * @var number
 	 */
 	private $integral = 0;
@@ -243,13 +238,13 @@ class Object_Product_Base extends Data_Object {
 	 * @return number
 	 */
 	public function GetIntegral() {
-		return $this->integral;
+		return (int) $this->integral;
 	}
-	
+
 	/**
 	 * 设置所需积分
 	 *
-	 * @param number $integral
+	 * @param number $integral        	
 	 */
 	public function SetIntegral($integral) {
 		if ($this->integral != $integral) {
@@ -320,7 +315,7 @@ class Object_Product_Base extends Data_Object {
 				'F5_A401' => $this->GetUnits (),
 				'F6_A401' => $this->GetIsEnabled (),
 				'F7_A401' => $this->GetType (),
-				'F8_A401' => $this->GetIntegral ()
+				'F8_A401' => $this->GetIntegral () 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

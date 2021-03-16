@@ -9,13 +9,87 @@ class ServiceController extends Zend_Controller_Action {
 			$this->_helper->viewRenderer->setNoRender ();
 		} else {
 			echo "Welcome to system services, use the command line to run the relevant procedures.\n";
-			die ();
+			// die ();
 		}
 	}
 
+	public function indexAction() {
+		die ( 'index' );
+	}
+
+	public function loadUserDataAction() {
+		//sudo -u www-data php /home/xy/daydreaming_php/public/service.php load-user-data
+		$data = $this->loadXlsData ( XMLDIR . '/player1.xls' );
+		print_r ( $data );
+		file_put_contents ( "/home/xy/daydreaming_php/log/ceshi.log", Zend_Json::encode ( $data ) . "\n", FILE_APPEND );
+		foreach ( $data as $value ) {
+			$nickname = $value ['B'];
+			$phone = $value ['C'];
+			$remark = $value ['D'];
+			$otime = date ( "Y-m-d H:i:s", $value ['K'] / 1000 );
+			$killerIntegral = $value ['F'];
+			$passersbyIntegral = $value ['G'];
+			$taskOfIntegral = $value ['H'];
+			
+			$user = new Business_User_Base ();
+			$user->SetRole ( 3 );
+			$user->SetStore ( new Business_User_Store ( 1 ) );
+			$user->SetNickname ( $nickname );
+			$user->SetPhone ( $phone );
+			if ($remark != 0) {
+				$user->SetRemark ( $remark );
+			}
+			
+			$user->SetOtime ( $otime );
+			$user->Save ();
+			
+			// 杀手
+			if ($killerIntegral > 0 && strlen ( $killerIntegral ) > 0) {
+				$user->AddIntegral ( $killerIntegral, new Business_Enum_Integral ( 'MANUAL_IN' ), new Business_User_Role ( 2 ) );
+			}
+			// 侦探
+			if ($taskOfIntegral > 0 && strlen ( $taskOfIntegral ) > 0) {
+				$user->AddIntegral ( $taskOfIntegral, new Business_Enum_Integral ( 'MANUAL_IN' ), new Business_User_Role ( 3 ) );
+			}
+			// 路人
+			if ($passersbyIntegral > 0 && strlen ( $passersbyIntegral ) > 0) {
+				$user->AddIntegral ( $passersbyIntegral, new Business_Enum_Integral ( 'MANUAL_IN' ), new Business_User_Role ( 4 ) );
+			}
+			
+			echo $nickname . "," . urldecode ( $otime ) . "\n";
+			sleep(1);
+			ob_flush ();
+			flush ();
+		}
+	}
+
+	public function loadXlsData($filename) {
+		set_time_limit ( 0 );
+		require_once ('/home/xy/daydreaming_php/public/tool/PHPExcel/Classes/PHPExcel.php');
+		// $objPHPExcel = new PHPExcel();//实例化PHPExcel类
+		$objPHPExcel = PHPExcel_IOFactory::load ( $filename ); // 加载文件
+		
+		$dataArr = array ();
+		foreach ( $objPHPExcel->getWorksheetIterator () as $k1 => $sheet ) { // 循环取sheet
+			foreach ( $sheet->getRowIterator () as $k2 => $row ) { // 逐行处理
+				if ($row->getRowIndex () < 2) {
+					continue;
+				}
+				foreach ( $row->getCellIterator () as $k3 => $cell ) { // 逐列读取
+					$data = $cell->getValue (); // 获取单元格数据
+					                            // echo $data." ";
+					$dataArr [$k2] [$k3] = $data;
+				}
+				// echo '<br>';
+			}
+			// echo '<br>';
+		}
+		return $dataArr;
+	}
+
 	public function swooleTestAction() {
-		file_put_contents ( "/home/xy/daydreaming/log/swoole-test.log", file_get_contents ( "php://input" ) . "\n", FILE_APPEND );
-		// nohup sudo -u www-data php /home/wwwroot/hospital_yu/public/service.php socket.udp.holepunch > /home/wwwroot/hospital_yu/log/udp.log 2>&1 &
+		file_put_contents ( "/home/xy/daydreaming_php/log/swoole-test.log", file_get_contents ( "php://input" ) . "\n", FILE_APPEND );
+		// nohup sudo -u www-data php /home/wwwroot/daydreaming_php/public/service.php swoole.test > /home/wwwroot/daydreaming_php/log/swoole.log 2>&1 &
 		// 创建Server对象，监听 127.0.0.1:9502端口，类型为SWOOLE_SOCK_UDP
 		$serv = new swoole_server ( "127.0.0.1", 9502, SWOOLE_PROCESS, SWOOLE_SOCK_UDP );
 		// $serv = new swoole_server("127.0.0.1", 9502, SWOOLE_PREOESS, SWOOLE_SOCK_IDP);
@@ -23,7 +97,7 @@ class ServiceController extends Zend_Controller_Action {
 		$serv->on ( 'Packet', function ($serv, $data, $clientInfo) {
 			$serv->sendto ( $clientInfo ['address'], $clientInfo ['port'], "Server " . $data );
 			var_dump ( $clientInfo );
-		} ); 
+		} );
 		
 		// 启动服务器
 		$serv->start ();

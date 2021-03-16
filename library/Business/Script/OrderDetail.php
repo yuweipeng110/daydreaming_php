@@ -18,12 +18,14 @@ class Business_Script_OrderDetail extends Object_Script_OrderDetail {
 		return null;
 	}
 
-	public function ChangeOrderDetail($isPay, $discount, $settlementPrice, Business_Option_ParmentMethod $parmentMethod) {
+	public function ChangeOrderDetail($isPay, $discount, $settlementPrice, Business_Option_PaymentMethod $paymentMethod, $gameRole, $integral) {
 		if ($this->GetId () > 0) {
 			$this->SetIsPay ( $isPay );
 			$this->SetDiscount ( $discount );
 			$this->SetSettlementPrice ( $settlementPrice );
-			$this->SetPaymentMethod ( $parmentMethod );
+			$this->SetPaymentMethod ( $paymentMethod );
+			$this->SetGameRole ( $gameRole );
+			$this->SetIntegral ( $integral );
 			$this->Save ();
 			
 			return true;

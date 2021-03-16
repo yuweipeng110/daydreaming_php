@@ -24,7 +24,7 @@ class Data_Object implements Interface_IData {
 	 * @param number $code        	
 	 */
 	public function SetCode($code) {
-		$this->code = $code;
+		$this->code = (int) $code;
 	}
 
 	/**
@@ -212,7 +212,7 @@ class Data_Object implements Interface_IData {
 	 * @see Interface_IData::GetId()
 	 */
 	public function GetId() {
-		return $this->id;
+		return (int) $this->id;
 	}
 
 	/**
@@ -245,7 +245,7 @@ class Data_Object implements Interface_IData {
 	 *
 	 * @param datetime $otime        	
 	 */
-	protected function SetOtime($otime) {
+	public function SetOtime($otime) {
 		$this->otime = $otime;
 	}
 

@@ -5,7 +5,7 @@
  * @author xy
  *
  */
-class Object_Script_ParmentMethod extends Data_Object {
+class Object_Script_PaymentMethod extends Data_Object {
 	
 	/**
 	 * 属性是否发生更改

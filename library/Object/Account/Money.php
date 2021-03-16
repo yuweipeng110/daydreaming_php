@@ -182,7 +182,7 @@ class Object_Account_Money extends Data_Object {
 	 * @return number
 	 */
 	public function GetChangeType() {
-		return $this->changeType;
+		return ( int ) $this->changeType;
 	}
 
 	/**
@@ -262,6 +262,39 @@ class Object_Account_Money extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
+	
+	/**
+	 * 支付方式
+	 *
+	 * @var Object_Script_ParmentMethod
+	 */
+	private $paymentMethod = null;
+
+	/**
+	 * 获取支付方式
+	 *
+	 * @return Object_Script_PaymentMethod
+	 */
+	public function GetPaymentMethod() {
+		$paymentMethod = new Object_Script_PaymentMethod ( $this->paymentMethod );
+		if ($paymentMethod->GetId () > 0) {
+			return $paymentMethod;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 设置支付方式
+	 *
+	 * @param Object_Script_PaymentMethod $paymentMethod        	
+	 */
+	public function SetPaymentMethod(Object_Script_PaymentMethod $paymentMethod) {
+		if ($this->paymentMethod != $paymentMethod->GetId ()) {
+			$this->paymentMethod = $paymentMethod->GetId ();
+			$this->isValueChanged = true;
+		}
+	}
 
 	/**
 	 * 构造函数
@@ -302,6 +335,7 @@ class Object_Account_Money extends Data_Object {
 			$this->SetChangeType ( $data ['F6_A801'] );
 			$this->promotions = $data ['F7_A801'];
 			$this->order = $data ['F8_A801'];
+			$this->paymentMethod = $data ['F9_A801'];
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -325,7 +359,8 @@ class Object_Account_Money extends Data_Object {
 				'F5_A801' => $this->GetRemarkReduce (),
 				'F6_A801' => $this->GetChangeType (),
 				'F7_A801' => $this->promotions,
-				'F8_A801' => $this->order 
+				'F8_A801' => $this->order,
+				'F9_A801' => $this->paymentMethod 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

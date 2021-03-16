@@ -220,7 +220,7 @@ class Business_User_Base extends Object_User_Base {
 		return sprintf ( "%.2f", $money );
 	}
 
-	public function AddMoney($changeMoney, Business_Enum_Money $changeMode, $changeType, Business_Promotions_Base $promotions = null, Business_Script_Order $order = null) {
+	public function AddMoney($changeMoney, Business_Enum_Money $changeMode, $changeType, Business_Option_PaymentMethod $paymentMethod = null, Business_Promotions_Base $promotions = null, Business_Script_Order $order = null) {
 		if ($this->GetId () == 0) {
 			return false;
 		}
@@ -250,9 +250,17 @@ class Business_User_Base extends Object_User_Base {
 			$changeMoney = $balanceChangeMoney;
 		}
 		
-		if($changeMoney != 0){
+		if ($changeMoney != 0) {
+			// 账户流水
 			$account = new Business_Account_Money ();
-			$moneyInstance = $account->CreateMoney ( $this, $changeMoney, $remarkIncrease, $remarkReduce, $changeType, $promotions, $order );
+			$moneyInstance = $account->CreateMoney ( $this, $changeMoney, $remarkIncrease, $remarkReduce, $changeType, $paymentMethod, $promotions, $order );
+			// 门店营收
+			if($changeMode->getValue() == "MANUAL_IN"){
+				$revenue = new Business_Account_Revenue ();
+				$store = new Business_User_Store ( $this->GetStore ()->GetId () );
+				$revenueChangeType = $order == null ? 1 : 2;
+				$revenue->CreateRevenue ( $this, abs($changeMoney), $remarkIncrease, $remarkReduce, $revenueChangeType, $store,$order, $paymentMethod );
+			}
 		}
 		
 		// voucher pay
@@ -261,10 +269,12 @@ class Business_User_Base extends Object_User_Base {
 			$remarkIncrease = "";
 			$remarkReduce = $changeMode->getValue ();
 			$changeType = 2;
+			$voucherPaymentMethod = new Business_Option_PaymentMethod ( 4 );
 			
-			$account->CreateMoney ( $this, $voucherMoney, $remarkIncrease, $remarkReduce, $changeType, $promotions, $order );
+			$account->CreateMoney ( $this, $voucherMoney, $remarkIncrease, $remarkReduce, $changeType, $paymentMethod, $promotions, $order );
 		}
 		
+		// 活动赠送虚拟钱币
 		if ($changeMoney > 0) {
 			$account->DetectPromotionsVoucherProcess ( $this, $changeMoney );
 		}

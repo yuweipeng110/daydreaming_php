@@ -31,6 +31,7 @@ class Business_User_Tool {
 		$valueData ['nickname'] = $instance->GetNickname ();
 		$valueData ['sex'] = $instance->GetSex ();
 		$valueData ['phone'] = $instance->GetPhone ();
+		$valueData ['birthday'] = $instance->GetBirthday ();
 		$valueData ['killerRanking'] = $instance->GetKillerRanking ();
 		$valueData ['killerIntegral'] = $instance->GetKillerIntegral ();
 		$valueData ['killerTitle'] = $instance->GetKillerTitle ();

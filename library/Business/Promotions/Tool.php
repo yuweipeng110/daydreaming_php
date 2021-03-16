@@ -7,6 +7,8 @@ class Business_Promotions_Tool {
 			return array ();
 		}
 		$instance = new Business_Promotions_Base ( $id );
+		$nowTime = date ( 'Y-m-d H:i:s' );
+		$isActive = $instance->GetStartTime () <= $nowTime && $instance->GetEndTime () >= $nowTime ? true : false;
 		
 		$valueData = array ();
 		$valueData ['id'] = $instance->GetId ();
@@ -15,6 +17,7 @@ class Business_Promotions_Tool {
 		$valueData ['endTime'] = $instance->GetEndTime ();
 		$valueData ['rechargeMoney'] = $instance->GetRechargeMoney ();
 		$valueData ['voucherMoney'] = $instance->GetVoucherMoney ();
+		$valueData ['isActive'] = $isActive;
 		$valueData ['otime'] = $instance->GetOtime ();
 		
 		return $valueData;

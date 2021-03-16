@@ -120,7 +120,7 @@ class Object_Script_Base extends Data_Object {
 	 * @return number
 	 */
 	public function GetAmount() {
-		return $this->amount;
+		return (int) $this->amount;
 	}
 
 	/**
@@ -269,7 +269,7 @@ class Object_Script_Base extends Data_Object {
 	 * @return string
 	 */
 	public function GetGameTime() {
-		return $this->gameTime;
+		return (int) $this->gameTime;
 	}
 
 	/**
@@ -291,7 +291,7 @@ class Object_Script_Base extends Data_Object {
 	 * @return number
 	 */
 	public function GetIsAdapt() {
-		return $this->isAdapt;
+		return (int) $this->isAdapt;
 	}
 
 	/**
@@ -324,6 +324,28 @@ class Object_Script_Base extends Data_Object {
 	public function SetAdaptContent($adaptContent) {
 		if ($this->adaptContent != $adaptContent) {
 			$this->adaptContent = $adaptContent;
+			$this->isValueChanged = true;
+		}
+	}
+	private $content = "";
+
+	/**
+	 * 获取改编内容
+	 *
+	 * @return string
+	 */
+	public function GetContent() {
+		return $this->content;
+	}
+
+	/**
+	 * 设置改编内容
+	 *
+	 * @param string $content        	
+	 */
+	public function SetContent($content) {
+		if ($this->content != $content) {
+			$this->content = $content;
 			$this->isValueChanged = true;
 		}
 	}
@@ -371,6 +393,7 @@ class Object_Script_Base extends Data_Object {
 			$this->SetGameTime ( $data ['F10_A301'] );
 			$this->SetIsAdapt ( $data ['F11_A301'] );
 			$this->SetAdaptContent ( $data ['F12_A301'] );
+			$this->SetContent ( $data ['F13_A301'] );
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -398,7 +421,8 @@ class Object_Script_Base extends Data_Object {
 				'F9_A301' => $this->GetApplicableNumber (),
 				'F10_A301' => $this->GetGameTime (),
 				'F11_A301' => $this->GetIsAdapt (),
-				'F12_A301' => $this->GetAdaptContent () 
+				'F12_A301' => $this->GetAdaptContent (),
+				'F13_A301' => $this->GetContent () 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

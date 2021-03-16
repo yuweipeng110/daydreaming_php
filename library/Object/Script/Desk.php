@@ -55,7 +55,7 @@ class Object_Script_Desk extends Data_Object {
 	 * @return number
 	 */
 	public function GetIsEnabled() {
-		return $this->isEnabled;
+		return (int) $this->isEnabled;
 	}
 
 	/**

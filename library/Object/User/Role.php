@@ -55,7 +55,7 @@ class Object_User_Role extends Data_Object {
 	 * @return number
 	 */
 	public function GetMaxAddIntegral() {
-		return $this->maxAddIntegral;
+		return (int) $this->maxAddIntegral;
 	}
 
 	/**

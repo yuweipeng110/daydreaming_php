@@ -20,8 +20,9 @@ class Business_Script_Tool {
 		$valueData ['description'] = $instance->GetDescription ();
 		$valueData ['applicableNumber'] = $instance->GetApplicableNumber ();
 		$valueData ['gameTime'] = $instance->GetGameTime ();
-		$valueData ['isAdapt'] = $instance->GetIsAdapt ();
+		$valueData ['isAdapt'] = $instance->GetIsAdapt () ? true : false;
 		$valueData ['adaptContent'] = $instance->GetAdaptContent ();
+		$valueData ['content'] = $instance->GetContent ();
 		$valueData ['otime'] = $instance->GetOtime ();
 		
 		return $valueData;
@@ -103,7 +104,7 @@ class Business_Script_Tool {
 		$instance = new Business_Script_OrderDetail ( $id );
 		
 		$valueData = array ();
-		$valueData ['id'] = $instance->GetId ();
+		$valueData ['id'] = ( int ) $instance->GetId ();
 		$valueData ['orderId'] = $instance->GetOrder ()->GetId ();
 		$valueData ['userId'] = $instance->GetUser () == null ? 0 : $instance->GetUser ()->GetId ();
 		if (! is_null ( $instance->GetUser () )) {
@@ -112,10 +113,10 @@ class Business_Script_Tool {
 		$valueData ['unitPrice'] = $instance->GetUnitPrice ();
 		$valueData ['isPay'] = $instance->GetIsPay ();
 		$valueData ['discount'] = $instance->GetDiscount ();
-		if (! is_null ( $instance->GetPaymentMethod () )) {
-			$valueData ['paymentMethodId'] = $instance->GetPaymentMethod ()->GetId ();
-			$valueData ['paymentMethodInfo'] = Business_Option_Tool::GetPaymentMethodFieldData ( $instance->GetPaymentMethod ()->GetId () );
-		}
+		$valueData ['settlementPrice'] = $instance->GetSettlementPrice ();
+		$valueData ['paymentMethod'] = $instance->GetPaymentMethod () == null ? 0 : $instance->GetPaymentMethod ()->GetId ();
+		$valueData ['discountPrice'] = $instance->GetUnitPrice () * $instance->GetDiscount ();
+		$valueData ['discountPercentage'] = $instance->GetDiscount () * 100;
 		$valueData ['otime'] = $instance->GetOtime ();
 		
 		return $valueData;
@@ -133,9 +134,9 @@ class Business_Script_Tool {
 		$instance = new Business_Script_Desk ( $id );
 		
 		$valueData = array ();
-		$valueData ['id'] = $instance->GetId ();
+		$valueData ['id'] = ( int ) $instance->GetId ();
 		$valueData ['title'] = $instance->GetTitle ();
-		$valueData ['isEnabled'] = $instance->GetIsEnabled ();
+		$valueData ['isEnabled'] = $instance->GetIsEnabled () ? true : false;
 		$valueData ['storeId'] = $instance->GetStore () == null ? 0 : $instance->GetStore ()->GetId ();
 		$valueData ['storeName'] = $instance->GetStore () == null ? '' : $instance->GetStore ()->GetName ();
 		$valueData ['otime'] = $instance->GetOtime ();

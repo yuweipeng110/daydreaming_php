@@ -52,15 +52,16 @@ class Business_Webpage_Order extends Data_Explain {
 		return true;
 	}
 
-	public function EditOrder($orderId, $deskId, $hostId, $remark, $detailList) {
+	public function EditOrder($orderId, $scriptId, $deskId, $hostId, $remark, $detailList) {
 		$result = false;
 		$resultCode = 0;
 		if (isset ( $orderId ) && isset ( $deskId ) && isset ( $hostId ) && isset ( $detailList )) {
 			$order = new Business_Script_Order ( $orderId );
+			$script = new Business_Script_Base ( $scriptId );
 			$desk = new Business_Script_Desk ( $deskId );
 			$host = new Business_User_Base ( $hostId );
 			
-			$changeOrder = $order->ChangeOrder ( $desk, $host, $remark, $detailList );
+			$changeOrder = $order->ChangeOrder ( $script, $desk, $host, $remark, $detailList );
 			
 			if ($changeOrder != null) {
 				

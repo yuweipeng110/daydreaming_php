@@ -44,16 +44,43 @@ class Business_User_List {
 		return $objectList;
 	}
 
-	public static function SearchUserList($storeId, $nickname, $phone) {
+	public static function SearchUserList($storeId, $nickname, $phone, $roleId, $isHost) {
 		$storeIdString = $storeId == "" ? "" : " AND F2_A201 = $storeId";
 		$nicknameString = $nickname == "" ? "" : " AND F4_A201 LIKE '%$nickname%'";
 		$phoneString = $phone == "" ? "" : " AND F6_A201 LIKE '%$phone%'";
+		$roleString = $roleId == "" ? "" : " AND F1_A201 = $roleId";
+		$isHostString = $isHost == "" ? "" : " AND F1_A201 != 3";
 		
 		$sqlString = "SELECT ID FROM A_201 WHERE 1=1
 		$storeIdString
 		$nicknameString
 		$phoneString
-		ORDER BY OTIME DESC";
+		$roleString
+		$isHostString
+		ORDER BY F1_A201 ASC,OTIME DESC";
+		
+		$table = new Custom_Adapter ();
+		$db = $table->getAdapter ();
+		$data = $db->fetchAll ( $sqlString );
+		$objectList = array ();
+		
+		foreach ( $data as $value ) {
+			$objectList [] = $value ['ID'];
+		}
+		return $objectList;
+	}
+
+	public static function SearchHostList($storeId, $nickname, $phone) {
+		$storeIdString = $storeId == "" ? "" : " AND F2_A201 = $storeId";
+		$nicknameString = $nickname == "" ? "" : " AND F4_A201 LIKE '%$nickname%'";
+		$phoneString = $phone == "" ? "" : " AND F6_A201 LIKE '%$phone%'";
+		
+		$sqlString = "SELECT ID FROM A_201 WHERE 1=1
+		AND F1_A201 != 3
+		$storeIdString
+		$nicknameString
+		$phoneString
+		ORDER BY F1_A201 ASC,OTIME DESC";
 		
 		$table = new Custom_Adapter ();
 		$db = $table->getAdapter ();
@@ -82,12 +109,14 @@ class Business_User_List {
 		return $objectList;
 	}
 
-	public static function SearchPlayerList($nickname, $phone) {
+	public static function SearchPlayerList($storeId, $nickname, $phone) {
+		$storeIdString = $storeId == "" ? "" : " AND F2_A201 = $storeId";
 		$nicknameString = $nickname == "" ? "" : " AND F4_A201 LIKE '%$nickname%'";
-		$phoneString = $phone == "" ? "" : " AND F6_A201 LIKE '%$phone%'";
+		$phoneString = $phone == "" ? "" : " AND (F6_A201 LIKE '%$phone%' OR F4_A201 LIKE '%$phone%')";
 		
 		$sqlString = "SELECT ID FROM A_201 WHERE 1=1
 		AND F1_A201 = 3
+		$storeIdString
 		$nicknameString
 		$phoneString
 		ORDER BY OTIME DESC";

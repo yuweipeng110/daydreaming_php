@@ -66,7 +66,7 @@ class Business_Webpage_Script extends Data_Explain {
 	 * @param unknown $adaptContent        	
 	 * @return boolean
 	 */
-	public function EditScript($scriptId, $title, $type, $amount, $costPrice, $description, $applicableNumber, $gameTime, $isAdapt, $adaptContent) {
+	public function EditScript($scriptId, $title, $type, $amount, $costPrice, $formatPrice, $description, $applicableNumber, $gameTime, $isAdapt, $adaptContent,$content) {
 		$result = false;
 		$resultCode = 0;
 		if (isset ( $scriptId )) {
@@ -75,15 +75,17 @@ class Business_Webpage_Script extends Data_Explain {
 			if ($resultCode == 0) {
 				$costPrice = isset ( $costPrice ) ? $costPrice : $script->GetCostPrice ();
 				
-				$script->SetTitle ( $title );
-				$script->SetType ( $type );
-				$script->SetAmount ( $amount );
-				$script->SetCostPrice ( $costPrice );
-				$script->SetDescription ( $description );
-				$script->SetApplicableNumber ( $applicableNumber );
-				$script->SetGameTime ( $gameTime );
-				$script->SetIsAdapt ( $isAdapt );
-				$script->SetAdaptContent ( $adaptContent );
+				$script->SetTitle ( isset ( $title ) ? $title : $script->GetTitle () );
+				$script->SetType ( isset ( $type ) ? $type : $script->GetType () );
+				$script->SetAmount ( isset ( $amount ) ? $amount : $script->GetAmount () );
+				$script->SetCostPrice ( isset ( $costPrice ) ? $costPrice : $script->GetCostPrice () );
+				$script->SetFormatPrice ( isset ( $formatPrice ) ? $formatPrice : $script->GetFormatPrice () );
+				$script->SetDescription ( isset ( $description ) ? $description : $script->GetDescription () );
+				$script->SetApplicableNumber ( isset ( $applicableNumber ) ? $applicableNumber : $script->GetApplicableNumber () );
+				$script->SetGameTime ( isset ( $gameTime ) ? $gameTime : $script->GetGameTime () );
+				$script->SetIsAdapt ( isset ( $isAdapt ) ? $isAdapt : $script->GetIsAdapt () );
+				$script->SetAdaptContent ( isset ( $adaptContent ) ? $adaptContent : $script->GetAdaptContent () );
+				$script->SetContent ( isset ( $content ) ? $content : $script->GetContent () );
 				$script->Save ();
 				
 				$resultCode = Business_Webpage_Message::SUCCESS;
@@ -98,4 +100,5 @@ class Business_Webpage_Script extends Data_Explain {
 		$this->SetMessage ( $resultMessage );
 		return $result;
 	}
+	
 }

@@ -141,7 +141,7 @@ class Object_Script_OrderDetail extends Data_Object {
 	 * @return number
 	 */
 	public function GetIsPay() {
-		return $this->isPay;
+		return ( int ) $this->isPay;
 	}
 
 	/**
@@ -212,37 +212,91 @@ class Object_Script_OrderDetail extends Data_Object {
 		}
 	}
 	
-
-
 	/**
-	 * 结算方式
+	 * 支付方式
 	 *
-	 * @var Object_Script_ParmentMethod
+	 * @var Object_Script_PaymentMethod
 	 */
 	private $paymentMethod = null;
-	
+
 	/**
-	 * 获取结算方式
+	 * 获取支付方式
 	 *
-	 * @return Object_Script_ParmentMethod
+	 * @return Object_Script_PaymentMethod
 	 */
 	public function GetPaymentMethod() {
-		$paymentMethod = new Object_Script_ParmentMethod ( $this->paymentMethod );
+		$paymentMethod = new Object_Script_PaymentMethod ( $this->paymentMethod );
 		if ($paymentMethod->GetId () > 0) {
 			return $paymentMethod;
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * 设置结算方式
+	 * 设置支付方式
 	 *
-	 * @param Object_Script_ParmentMethod $paymentMethod
+	 * @param Object_Script_PaymentMethod $paymentMethod        	
 	 */
-	public function SetPaymentMethod(Object_Script_ParmentMethod $paymentMethod) {
+	public function SetPaymentMethod(Object_Script_PaymentMethod $paymentMethod) {
 		if ($this->paymentMethod != $paymentMethod->GetId ()) {
 			$this->paymentMethod = $paymentMethod->GetId ();
+			$this->isValueChanged = true;
+		}
+	}
+	
+	/**
+	 * 游戏角色
+	 *
+	 * @var number
+	 */
+	private $gameRole = 0;
+
+	/**
+	 * 获取游戏角色
+	 *
+	 * @return number
+	 */
+	public function GetGameRole() {
+		return ( int ) $this->gameRole;
+	}
+
+	/**
+	 * 设置游戏角色
+	 *
+	 * @param number $gameRole        	
+	 */
+	public function SetGameRole($gameRole) {
+		if ($this->gameRole != $gameRole) {
+			$this->gameRole = $gameRole;
+			$this->isValueChanged = true;
+		}
+	}
+	
+	/**
+	 * 积分
+	 *
+	 * @var number
+	 */
+	private $integral = 0;
+
+	/**
+	 * 获取积分
+	 *
+	 * @return number
+	 */
+	public function GetIntegral() {
+		return ( int ) $this->integral;
+	}
+
+	/**
+	 * 设置积分
+	 *
+	 * @param number $integral        	
+	 */
+	public function SetIntegral($integral) {
+		if ($this->integral != $integral) {
+			$this->integral = $integral;
 			$this->isValueChanged = true;
 		}
 	}
@@ -285,6 +339,8 @@ class Object_Script_OrderDetail extends Data_Object {
 			$this->SetDiscount ( $data ['F5_A303'] );
 			$this->SetSettlementPrice ( $data ['F6_A303'] );
 			$this->paymentMethod = $data ['F7_A303'];
+			$this->SetGameRole ( $data ['F8_A303'] );
+			$this->SetIntegral ( $data ['F9_A303'] );
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -307,7 +363,9 @@ class Object_Script_OrderDetail extends Data_Object {
 				'F4_A303' => $this->GetIsPay (),
 				'F5_A303' => $this->GetDiscount (),
 				'F6_A303' => $this->GetSettlementPrice (),
-				'F7_A303' => $this->paymentMethod 
+				'F7_A303' => $this->paymentMethod,
+				'F8_A303' => $this->GetGameRole (),
+				'F9_A303' => $this->GetIntegral () 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );

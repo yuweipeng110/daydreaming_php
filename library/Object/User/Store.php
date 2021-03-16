@@ -55,7 +55,7 @@ class Object_User_Store extends Data_Object {
 	 * @return string
 	 */
 	public function GetStatus() {
-		return $this->status;
+		return (int) $this->status;
 	}
 
 	/**

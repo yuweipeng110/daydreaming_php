@@ -27,7 +27,7 @@ class Object_User_Base extends Data_Object {
 	 * @return number
 	 */
 	public function GetRole() {
-		return $this->role;
+		return ( int ) $this->role;
 	}
 
 	/**
@@ -153,7 +153,7 @@ class Object_User_Base extends Data_Object {
 	 * @return string
 	 */
 	public function GetSex() {
-		return $this->sex;
+		return ( int ) $this->sex;
 	}
 
 	/**
@@ -197,7 +197,7 @@ class Object_User_Base extends Data_Object {
 	 * @return string
 	 */
 	public function GetKillerIntegral() {
-		return $this->killerIntegral;
+		return ( int ) $this->killerIntegral;
 	}
 
 	/**
@@ -219,7 +219,7 @@ class Object_User_Base extends Data_Object {
 	 * @return string
 	 */
 	public function GetDetectiveIntegral() {
-		return $this->detectiveIntegral;
+		return ( int ) $this->detectiveIntegral;
 	}
 
 	/**
@@ -241,7 +241,7 @@ class Object_User_Base extends Data_Object {
 	 * @return string
 	 */
 	public function GetPeopleIntegral() {
-		return $this->peopleIntegral;
+		return ( int ) $this->peopleIntegral;
 	}
 
 	/**
@@ -255,7 +255,6 @@ class Object_User_Base extends Data_Object {
 			$this->isValueChanged = true;
 		}
 	}
-	
 	private $remark = "";
 
 	/**
@@ -266,11 +265,11 @@ class Object_User_Base extends Data_Object {
 	public function GetRemark() {
 		return $this->remark;
 	}
-	
+
 	/**
 	 * 设置备注
 	 *
-	 * @param string $remark
+	 * @param string $remark        	
 	 */
 	public function SetRemark($remark) {
 		if ($this->remark != $remark) {
@@ -279,6 +278,33 @@ class Object_User_Base extends Data_Object {
 		}
 	}
 	
+	/**
+	 * 生日
+	 *
+	 * @var string
+	 */
+	private $birthday = '';
+
+	/**
+	 * 获取生日
+	 *
+	 * @return string
+	 */
+	public function GetBirthday() {
+		return $this->birthday;
+	}
+
+	/**
+	 * 设置生日
+	 *
+	 * @param string $birthday        	
+	 */
+	public function SetBirthday($birthday) {
+		if ($this->birthday != $birthday) {
+			$this->birthday = $birthday;
+			$this->isValueChanged = true;
+		}
+	}
 
 	/**
 	 * 构造函数
@@ -320,7 +346,8 @@ class Object_User_Base extends Data_Object {
 			$this->SetKillerIntegral ( $data ['F7_A201'] );
 			$this->SetDetectiveIntegral ( $data ['F8_A201'] );
 			$this->SetPeopleIntegral ( $data ['F9_A201'] );
-			$this->SetRemark($data['F10_A201']);
+			$this->SetRemark ( $data ['F10_A201'] );
+			$this->SetBirthday ( $data ['F11_A201'] );
 			$this->SetOtime ( $data ['OTIME'] );
 		} else {
 			$this->SetId ( 0 );
@@ -345,8 +372,10 @@ class Object_User_Base extends Data_Object {
 				'F6_A201' => $this->GetPhone (),
 				'F7_A201' => $this->GetKillerIntegral (),
 				'F8_A201' => $this->GetDetectiveIntegral (),
-				'F9_A201' => $this->GetPeopleIntegral () ,
-				'F10_A201' => $this->GetRemark()
+				'F9_A201' => $this->GetPeopleIntegral (),
+				'F10_A201' => $this->GetRemark (),
+				'F11_A201' => $this->GetBirthday (),
+				'OTIME' => $this->GetOtime () 
 		);
 		$this->SafeParam ( $data );
 		$this->table->setTable ( $this->getTableName () );
