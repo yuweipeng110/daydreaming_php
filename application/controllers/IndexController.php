@@ -40,16 +40,12 @@ class IndexController extends Zend_Controller_Action {
 	}
 
 	public function index1Action() {
-		$orderId = 16;
-		$userId = 1;
-		$isPay = 1;
-		
-		$order = new Business_Script_Order ( $orderId );
-		$orderDetail = new Business_Script_OrderDetail ();
-		$user = new Business_User_Base ( $userId );
-		
-		$orderDetailIntegral = $orderDetail->CreateOrderDetail ( $order, $user, $isPay );
-		print_r ( $orderDetailIntegral->GetId () );
+		$storeId = 1;
+		$list = Business_Statistics_Integral::GetUserIntegralStatistics($storeId);
+		$list1 = Business_Statistics_Integral::GetUserIntegralStatisticsFieldDataList($list);
+		print_r($list);
+		print_r($list1);
+		die();
 		die ( 'x' );
 		// print_r(XMLDIR.'/player1.csv');
 		// $result = $this->import_csv(XMLDIR.'/player1.xls');

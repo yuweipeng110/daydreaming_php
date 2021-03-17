@@ -2,18 +2,56 @@
 
 class Business_Statistics_Integral {
 
-	public static function GetUserIntegralStatistics($storeId, $roleId) {
-		$roleString = $roleId == "1" ? "" : " AND F6_A802 = $roleId";
+	public static function GetUserIntegralStatistics($storeId) {
+// 		$roleString = $roleId == "1" ? "" : " AND F6_A802 = $roleId";
 		$sql = "
+			(
 				SELECT 
 				F1_A802 AS 'USER_ID',
 				OTIME,
 				SUM(F2_A802) AS 'SUM_INTEGRAL' 
 				FROM A_802 
 				WHERE 1 = 1
-				$roleString
 				GROUP BY F1_A802 
 				ORDER BY SUM_INTEGRAL DESC,OTIME DESC
+				LIMIT 10
+			) UNION ALL 
+			(
+				SELECT 
+				F1_A802 AS 'USER_ID',
+				OTIME,
+				SUM(F2_A802) AS 'SUM_INTEGRAL' 
+				FROM A_802 
+				WHERE 1 = 1
+				AND F6_A802 = 2
+				GROUP BY F1_A802 
+				ORDER BY SUM_INTEGRAL DESC,OTIME DESC
+				LIMIT 10
+			) UNION ALL 
+			(
+				SELECT 
+				F1_A802 AS 'USER_ID',
+				OTIME,
+				SUM(F2_A802) AS 'SUM_INTEGRAL' 
+				FROM A_802 
+				WHERE 1 = 1
+				AND F6_A802 = 3
+				GROUP BY F1_A802 
+				ORDER BY SUM_INTEGRAL DESC,OTIME DESC
+				LIMIT 10
+			) UNION ALL 
+			(
+				SELECT 
+				F1_A802 AS 'USER_ID',
+				OTIME,
+				SUM(F2_A802) AS 'SUM_INTEGRAL' 
+				FROM A_802 
+				WHERE 1 = 1
+				AND F6_A802 = 4
+				GROUP BY F1_A802 
+				ORDER BY SUM_INTEGRAL DESC,OTIME DESC
+				LIMIT 10
+			)
 		";
 		
 		$table = new Custom_Adapter ();
@@ -24,10 +62,15 @@ class Business_Statistics_Integral {
 
 	public static function GetUserIntegralStatisticsFieldDataList($list) {
 		$listCollection = array ();
-		foreach ( $list as $value ) {
-			$listCollection [] = Business_User_Tool::GetUserFieldData ( $value['USER_ID'] );
+		foreach ( $list as $key => $value ) {
+			$dataValue = array ();
+			$dataValue ['userId'] = $value ['USER_ID'];
+			$dataValue ['userInfo'] = Business_User_Tool::GetUserFieldData ( $value ['USER_ID'] );
+			
+			$listCollection [] = $dataValue;
 		}
 		
-		return $listCollection;
+		$result = array_chunk ( $listCollection, 10 );
+		return list ( $killerList, $detectiveList, $peopleList, $totalList ) = $result;
 	}
 }
